@@ -28,7 +28,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 export default function ClientsScreen({ navigation }) {
   //Method to go to the next screen
   //Context global vars
-  const { platform, setClientActive } = useApp();
+  const { platform, setClientActive, isSignedIn, setIsSignedIn } = useApp();
 
   //Vars to manage loading CPS
   const [clients, setClients] = useState([]);
@@ -60,7 +60,7 @@ export default function ClientsScreen({ navigation }) {
           limit: "2000",
         };
         const clientsResponse = await getClientsInfo(ClientsObject);
-        console.log("ClientsResponse", clientsResponse);
+        //console.log("ClientsResponse", clientsResponse);
         setLoadingClients(false);
         if (clientsResponse !== null && clientsResponse !== undefined) {
           setClients(clientsResponse?.data);
@@ -104,13 +104,19 @@ export default function ClientsScreen({ navigation }) {
     navigation.navigate("CPS");
   };
 
+  //function to go to selection screen
+  const goToSelection = () => {
+    setIsSignedIn(false);
+    // navigation.navigate("Selection");
+  };
+
   return (
     <KeyboardAvoidingView style={styles.bg}>
       <View style={styles.mainContainer}>
         <View style={styles.titleScreen}>
           <Pressable
             style={styles.backPressable}
-            onPress={() => navigation.goBack()}
+            onPress={() => goToSelection()}
           >
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>

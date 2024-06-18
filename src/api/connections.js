@@ -1,5 +1,10 @@
 //imports from constants
-import { API_HOST, API_HOST_VALIDATE } from "../utils/constants";
+import {
+  API_HOST,
+  API_HOST_VALIDATE,
+  API_HOST_LOGIN,
+  API_HOST_SIGNUP,
+} from "../utils/constants";
 
 //To import secure-store
 import * as SecureStore from "expo-secure-store";
@@ -89,7 +94,7 @@ export async function getClientsInfo(clientsObject) {
         responseJson?.messages[0]?.code === "0" &&
         responseJson?.messages[0]?.message === "OK"
       ) {
-        console.log("responseJson data", responseJson?.response?.data);
+        //console.log("responseJson data", responseJson?.response?.data);
         return responseJson?.response;
       } else if (
         //error message
@@ -146,7 +151,7 @@ export async function getPromoInfo(promoObject) {
         responseJson?.messages[0]?.code === "0" &&
         responseJson?.messages[0]?.message === "OK"
       ) {
-        console.log("responseJson data", responseJson?.response?.data);
+        //console.log("responseJson data", responseJson?.response?.data);
         return responseJson?.response;
       } else if (
         //error message
@@ -203,7 +208,7 @@ export async function getWorkInfo(workObject) {
         responseJson?.messages[0]?.code === "0" &&
         responseJson?.messages[0]?.message === "OK"
       ) {
-        console.log("responseJson data", responseJson?.response?.data);
+        //console.log("responseJson data", responseJson?.response?.data);
         return responseJson?.response;
       } else if (
         //error message
@@ -329,6 +334,58 @@ export async function checkTokenIsValid(tokenToValidate, database) {
       return tokenToValidate;
     } else {
       return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function loginService({ username, password }) {
+  try {
+    console.log("Checking login, username, password", username, password);
+
+    const response = await fetch(`${API_HOST_LOGIN}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: username,
+        password: password,
+      }),
+    });
+    const responseJson = await response.json();
+    console.log("responseJsonLogin", responseJson);
+    if (responseJson?.token?.length > 0) {
+      return responseJson;
+    } else {
+      throw new Error("Usuario o contraseña incorrectos");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+export async function registerService({ username, password }) {
+  try {
+    console.log("Checking register, username, password", username, password);
+    const response = await fetch(`${API_HOST_SIGNUP}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: username,
+        password: password,
+      }),
+    });
+    const responseJson = await response.json();
+    console.log("responseJsonRegister", responseJson);
+    if (responseJson?.token?.length > 0 && responseJson?.id > 0) {
+      return responseJson;
+    } else {
+      throw new Error("Error en registro");
     }
   } catch (error) {
     throw error;

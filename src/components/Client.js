@@ -12,7 +12,7 @@ export default function Client(props) {
   const Soc_Denominacion = item?.fieldData?.Soc_Denominacion;
   const Soc_Telefono1 = item?.fieldData?.Soc_Telefono1;
 
-  console.log("item", item);
+  //console.log("item", item);
   return (
     <View style={styles.bg}>
       <Pressable style={styles.mainContainer} onPress={onPressGoToCPS}>
@@ -39,9 +39,19 @@ const styles = StyleSheet.create({
     width: "95%",
     alignSelf: "center",
     flex: 1,
-    marginTop: 4,
+    marginTop: 8,
+    marginBottom: 8,
     backgroundColor: COLORS.disabled4,
     borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.4,
+
+    elevation: 2,
   },
   mainContainer: {
     width: "100%",

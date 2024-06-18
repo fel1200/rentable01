@@ -47,6 +47,7 @@ const ImageFullScreen = ({ navigation }) => {
               uri: imageURLActive,
             }}
             style={styles.imageWork}
+            resizeMode="contain"
           />
         </View>
       </View>

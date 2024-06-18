@@ -1,4 +1,6 @@
-import React, { useState, createContext, Platform } from "react";
+import React, { useState, createContext, Platform, useEffect } from "react";
+//import for expo secure storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AppContext = createContext({
   //General data to be used in the app
@@ -17,6 +19,15 @@ export function AppProvider(props) {
   const [CPSActive, setCPSActive] = useState(undefined);
   const [promoActive, setPromoActive] = useState(undefined);
   const [imageURLActive, setImageURLActive] = useState(undefined);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  console.log("isSignedIn", isSignedIn);
+  //get and set isSignedIn from storage
+  useEffect(() => {
+    AsyncStorage.getItem("isSignedIn").then((value) => {
+      setIsSignedIn(value);
+    });
+  }, []);
 
   const [platform, setPlatform] = useState("iOS");
   const valueContext = {
@@ -28,6 +39,8 @@ export function AppProvider(props) {
     setPromoActive,
     imageURLActive,
     setImageURLActive,
+    isSignedIn,
+    setIsSignedIn,
   };
   return (
     <AppContext.Provider value={valueContext}>{children}</AppContext.Provider>

@@ -12,8 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
-//To store data
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //We use dropdown picker for lists
 // import DropDownPicker from "react-native-dropdown-picker";
@@ -22,16 +21,16 @@ import useApp from "../hooks/useApp";
 //Constants for the colors
 import { COLORS } from "../utils/constants";
 //Components
-import LoginForm from "../components/LoginForm";
+import CreatePasswordForm from "../components/CreatePasswordForm";
 
 //Customized text
 import MyAppText from "../components/componentStyles/MyAppText";
 //To import icons
 import Icon from "react-native-vector-icons/AntDesign";
 
-export default function LoginScreen({ navigation }) {
+export default function CreatePasswordScreen({ navigation }) {
   //Getting data from context
-  const { setIsSignedIn } = useApp();
+  const {} = useApp();
 
   //Handling errors in api
   const [errorApi, setErrorApi] = useState(undefined);
@@ -61,16 +60,8 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
-  //set isSignedIn to false
-  useEffect(() => {
-    setIsSignedIn(false);
-    //secure storage
-    AsyncStorage.setItem("isSignedIn", "false");
-  }, []);
-
   const goToMainScreen = () => {
-    //back
-    navigation.navigate("Selection");
+    navigation.navigate("Main");
   };
 
   //Method to style the height of image depending the screen size
@@ -93,7 +84,10 @@ export default function LoginScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={styles.bg} behavior="padding">
       <View style={styles.titleScreen}>
-        <Pressable style={styles.backPressable} onPress={goToMainScreen}>
+        <Pressable
+          style={styles.backPressable}
+          onPress={() => navigation.goBack()}
+        >
           <Icon name="arrowleft" size={30} color={COLORS.primary1} />
         </Pressable>
         {/* <Text style={styles.textTitle}>Inicia sesión</Text> */}
@@ -102,7 +96,7 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.boxTitleLogin}>
           <View style={styles.leftSideBoxTitleLogin}>
             <Image
-              source={require("../assets/userGeneric.png")}
+              source={require("../assets/passwordGenericWhite.png")}
               style={{
                 width: 34,
                 height: 34,
@@ -111,7 +105,7 @@ export default function LoginScreen({ navigation }) {
           </View>
           <View style={styles.rightSideBoxTitleLogin}>
             <Text style={styles.textSubMain} typeFont="Medium">
-              Inicia sesión
+              Crea tu contraseña
             </Text>
           </View>
         </View>
@@ -119,7 +113,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.mainContainer}>
         <View style={styles.imageLogin}>
           <Image
-            source={require("../assets/login.png")}
+            source={require("../assets/passwordImage.png")}
             style={{
               width: 146,
               height: 160,
@@ -132,20 +126,7 @@ export default function LoginScreen({ navigation }) {
           contentContainerStyle={styles.grow}
           style={styles.scrollView}
         >
-          <LoginForm nav={navigation} />
-          <View style={styles.dontHaveAccount}>
-            <Text style={styles.textDontHaveAccount}>¿No tienes cuenta? </Text>
-            <Pressable onPress={() => navigation.navigate("CreatePassword")}>
-              <Text
-                style={[
-                  styles.textDontHaveAccount,
-                  { color: COLORS.primary1, fontSize: 14 },
-                ]}
-              >
-                Regístrate
-              </Text>
-            </Pressable>
-          </View>
+          <CreatePasswordForm nav={navigation} />
         </ScrollView>
       </View>
     </KeyboardAvoidingView>
@@ -153,17 +134,12 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.neutral,
-  },
   bg: {
     flex: 1,
     paddingTop: StatusBar.currentHeight + 52,
     flexDirection: "column",
-    backgroundColor: "white",
+    backgroundColor: COLORS.white,
   },
-
   mainContainer: {
     marginTop: 12,
     alignItems: "center",
@@ -203,6 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: COLORS.primary1,
     flexDirection: "row",
+    // borderWidth: 2,
   },
 
   leftSideBoxTitleLogin: {
@@ -220,6 +197,7 @@ const styles = StyleSheet.create({
   imageLogin: {
     alignItems: "center",
     marginTop: 32,
+    height: 171,
     zIndex: -1,
   },
 
@@ -235,22 +213,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textSubMain: {
-    fontSize: 22,
+    fontSize: 18,
     color: COLORS.white,
-    marginRight: 28,
+    marginRight: 22,
   },
 
-  dontHaveAccount: {
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    marginTop: 20,
+  scrollView: {
+    //effects
   },
-  textDontHaveAccount: {
-    color: COLORS.disabled1,
-    fontSize: 14,
-  },
-  scrollView: {},
 
   grow: {
     marginTop: 8,
