@@ -101,7 +101,8 @@ export default function ClientsScreen({ navigation }) {
   //function to to to info of CPS of a client
   const goToCPS = (item) => {
     setClientActive(item);
-    navigation.navigate("CPS");
+    //navigation to CPS with type = "Espectaculares"
+    navigation.navigate("CPS", { type: "Espectaculares" });
   };
 
   //function to go to selection screen
@@ -121,10 +122,7 @@ export default function ClientsScreen({ navigation }) {
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>
           <Text style={styles.textTitle}>Clientes</Text>
-          <Pressable
-            style={styles.buttonUser}
-            onPress={() => navigation.goBack()}
-          >
+          <Pressable style={styles.buttonUser} onPress={goToSelection}>
             <Icon name="user" size={30} color={COLORS.primary1} />
           </Pressable>
         </View>

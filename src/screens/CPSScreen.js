@@ -25,10 +25,13 @@ import { SearchBar } from "@rneui/themed";
 //To import icons
 import Icon from "react-native-vector-icons/AntDesign";
 
-export default function CPSScreen({ navigation }) {
+export default function CPSScreen({ navigation, route }) {
   //Method to go to the next screen
   //Context global vars
   const { platform, clientActive, setCPSActive } = useApp();
+
+  const typeCPS = route.params?.type;
+  console.log("Type CPS", typeCPS);
 
   //Vars to manage loading CPS
   const [cps, setCPS] = useState([]); //Number of CPS[0
@@ -127,7 +130,7 @@ export default function CPSScreen({ navigation }) {
           >
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>
-          <Text style={styles.textTitle}>CPS</Text>
+          <Text style={styles.textTitle}>{`CPS ${typeCPS}`} </Text>
           <Pressable
             style={styles.buttonUser}
             onPress={() => navigation.goBack()}

@@ -13,6 +13,7 @@ import CPSScreen from "../screens/CPSScreen";
 import PromoScreen from "../screens/PromoScreen";
 import WorksScreen from "../screens/WorksScreen";
 import ImageFullScreen from "../screens/ImageFullScreen";
+import TabScreenExample from "../screens/TabScreenExample";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function Navigation() {
     >
       {isSignedIn ? (
         <>
+          {/* <Stack.Screen name="Tab" component={TabScreenExample} /> */}
           <Stack.Screen name="Clients" component={ClientsScreen} />
           <Stack.Screen name="CPS" component={CPSScreen} />
           <Stack.Screen name="Promo" component={PromoScreen} />
