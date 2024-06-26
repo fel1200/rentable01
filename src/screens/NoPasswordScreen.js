@@ -55,7 +55,10 @@ export default function SplashScreen({ navigation }) {
 
   return (
     <View style={styles.bg}>
-      <Pressable style={styles.backPressable} onPress={goSplashScreen}>
+      <Pressable
+        style={styles.backPressable}
+        onPress={() => navigation.goBack()}
+      >
         <Icon name="arrowleft" size={30} color={COLORS.primary1} />
       </Pressable>
 
@@ -70,11 +73,11 @@ export default function SplashScreen({ navigation }) {
         }}
       />
       <Image
-        source={require("../assets/buildings.png")}
+        source={require("../assets/noPassword.png")}
         style={{
-          width: 217,
-          height: 144,
-          marginTop: marginTopDependingScreen() + 50,
+          width: 137,
+          height: 174,
+          marginTop: marginTopDependingScreen(),
           alignSelf: "center",
         }}
       />
@@ -83,64 +86,16 @@ export default function SplashScreen({ navigation }) {
         <View style={styles.contentScroll}>
           <View style={styles.contentScrollCenter}>
             <Text style={styles.textWelcomeBold} typeFont="Medium">
-              Hola
+              Registro y recuperación
             </Text>
             <Text style={styles.textWelcomeLight} typeFont="Medium">
-              Bienvenido a Rentable management
+              Instrucciones
             </Text>
             <Text style={styles.textInstructions} typeFont="Medium">
-              Para usar la app, necesitas estar registrado previamente en el
-              sistema filemaker y después iniciar sesión aquí
+              Si aún no estás registrado o tu contraseña no funciona, favor de
+              contactar al administrador de filemaker para realizar el registro
+              reestablecimiento de la contraseña
             </Text>
-
-            {/* <Pressable
-              style={styles.buttonCreatePassword}
-              onPress={goCreatePasswordScreen}
-            >
-              <View style={styles.boxTitleLogin}>
-                <View style={styles.leftSideBoxTitleLogin}>
-                  <Image
-                    source={require("../assets/passwordGenericBlue.png")}
-                    style={{
-                      width: 34,
-                      height: 34,
-                    }}
-                  />
-                </View>
-                <View style={styles.rightSideBoxTitleLogin}>
-                  <Text style={styles.textSubMain}>Crea tu contraseña</Text>
-                </View>
-              </View>
-            </Pressable>
-
-            <Text
-              //create style specific of marginTop and from styles.textInstructions
-              style={[styles.textInstructions, { marginTop: 32 }]}
-              typeFont="Medium"
-            >
-              Después inicia sesión
-            </Text> */}
-            <Pressable onPress={goLoginScreen}>
-              <View
-                style={[
-                  { backgroundColor: COLORS.primary1 },
-                  styles.boxTitleLogin,
-                ]}
-              >
-                <View style={styles.leftSideBoxTitleLogin}>
-                  <Image
-                    source={require("../assets/userGeneric.png")}
-                    style={{
-                      width: 34,
-                      height: 34,
-                    }}
-                  />
-                </View>
-                <View style={styles.rightSideBoxTitleLogin}>
-                  <Text style={styles.textButtonLogin}> Iniciar sesión </Text>
-                </View>
-              </View>
-            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -179,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   textWelcomeBold: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
     color: COLORS.secondary2,
     marginTop: 16,

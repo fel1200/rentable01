@@ -10,6 +10,8 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+//To store data
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //colors constants
 import { COLORS } from "../utils/constants";
 //Styled text
@@ -28,7 +30,14 @@ import Icon from "react-native-vector-icons/AntDesign";
 export default function ClientsScreen({ navigation }) {
   //Method to go to the next screen
   //Context global vars
-  const { platform, setClientActive, isSignedIn, setIsSignedIn } = useApp();
+  const {
+    platform,
+    setClientActive,
+    isSignedIn,
+    setIsSignedIn,
+    userActive,
+    setUserActive,
+  } = useApp();
 
   //Vars to manage loading CPS
   const [clients, setClients] = useState([]);
@@ -40,6 +49,12 @@ export default function ClientsScreen({ navigation }) {
   //Useeffect to get token
   useEffect(() => {
     (async () => {
+      //Get data from user async storage
+      const userFromStorage = await AsyncStorage.getItem("user");
+      if (userFromStorage) {
+        setUserActive(JSON.parse(userFromStorage));
+      }
+
       setLoadingClients(true);
       setErrorLoadingClients("");
       try {
@@ -108,7 +123,7 @@ export default function ClientsScreen({ navigation }) {
   //function to go to selection screen
   const goToSelection = () => {
     setIsSignedIn(false);
-    // navigation.navigate("Selection");
+    navigation.navigate("Selection");
   };
 
   return (
@@ -117,7 +132,7 @@ export default function ClientsScreen({ navigation }) {
         <View style={styles.titleScreen}>
           <Pressable
             style={styles.backPressable}
-            onPress={() => goToSelection()}
+            onPress={() => navigation.goBack()}
           >
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>

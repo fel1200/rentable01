@@ -29,6 +29,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 //Colors
 import { COLORS } from "../utils/constants";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 //method to escape symbols including @
 const escapeSymbols = (string) => {
@@ -45,11 +46,15 @@ const LoginForm = (props) => {
     getValues,
   } = useForm();
 
+  //console log values
+  console.log("values", getValues());
+
   //data from context
   const { isSignedIn, setIsSignedIn } = useApp();
 
   //Login hook
-  const { isLoginLoading, hasLoginError, login, isLogged } = useUser();
+  const { isLoginLoading, hasLoginError, login, isLogged, user, setUser } =
+    useUser();
 
   //error login general, not specific
   const [errorLogin, setErrorLogin] = useState("");
@@ -91,10 +96,10 @@ const LoginForm = (props) => {
       };
       console.log("loginObject", loginObject);
       const response = await login({ loginObject });
+      console.log("responseLoginForm", response);
+      setUser(response?.data);
       //with fake api
       //const response = await login({ username, password });
-
-      //console.log("responseLogin", response);
     } catch (e) {
       console.log("error", e);
       setErrorLogin(e.message);
@@ -103,15 +108,83 @@ const LoginForm = (props) => {
     }
   };
 
-  console.log("isLogged", isLogged);
+  console.log("User in login form", user);
+
+  //check if is remember user
+  useEffect(() => {
+    (async () => {
+      const isRemember = await AsyncStorage.getItem("remember");
+      console.log("isRememberStorage", isRemember);
+      if (isRemember === "true") {
+        console.log("Entró a isRemember", isRemember);
+        //Check if there is a user and password
+        console.log("getValues", getValues("Username"));
+        console.log("getValues", getValues("Password"));
+        console.log("AsyncStorage user", AsyncStorage.getItem("username"));
+        console.log("AsyncStorage password", AsyncStorage.getItem("password"));
+        if (
+          getValues("Username") === "" &&
+          getValues("Password") === "" &&
+          AsyncStorage.getItem("username") &&
+          AsyncStorage.getItem("password")
+        ) {
+          console.log("Entró a if de usuario existente");
+          const username = await AsyncStorage.getItem("username");
+          const password = await AsyncStorage.getItem("password");
+          console.log("username from async", username);
+          console.log("password from async", password);
+          //update values in controller and input
+          setValue("Username", username);
+          setValue("Password", password);
+
+          //put the text in the input
+
+          //set remember to true
+          setRemember(true);
+        }
+      } else {
+        //clear values in asyncstorage and set remember to false
+        AsyncStorage.removeItem("username");
+        AsyncStorage.removeItem("password");
+        AsyncStorage.removeItem("remember");
+
+        //clear value of user too
+        setUser(null);
+        AsyncStorage.removeItem("user");
+        setRemember(false);
+      }
+    })();
+  }, []);
+
+  //if remember is false, clear values and set remember to false
+  useEffect(() => {
+    if (!remember) {
+      AsyncStorage.removeItem("username");
+      AsyncStorage.removeItem("password");
+      AsyncStorage.removeItem("remember");
+    }
+  }, [remember]);
+
+  // console.log("isLogged", isLogged);
   useEffect(() => {
     if (isLogged === true) {
       console.log("Entró a isLogged", isLogged);
       setIsSignedIn(true);
+      //save data of user in async storage
+      //Before saving we need to stringify the object
+      console.log("User stringified", JSON.stringify(user));
+      AsyncStorage.setItem("user", JSON.stringify(user));
       //secure storage
       AsyncStorage.setItem("isSignedIn", "true");
+      if (remember) {
+        console.log("GetValues", getValues("Username"));
+        console.log("GetValues", getValues("Password"));
+        AsyncStorage.setItem("username", getValues("Username"));
+        AsyncStorage.setItem("password", getValues("Password"));
+        AsyncStorage.setItem("remember", "true");
+      }
 
-      props.nav.navigate("ClientsScreen");
+      props.nav.navigate("Main");
     }
   }, [isLogged, props.nav]);
 
@@ -133,7 +206,7 @@ const LoginForm = (props) => {
         control={control}
         render={({ onChange, onBlur, value }) => (
           <Input
-            placeholder="Usuario"
+            placeholder="Usuario de filemaker"
             placeholderTextColor={COLORS.disabled1}
             //Guardamos el valor del input
             //OnChangeText que resetea el error
@@ -141,7 +214,7 @@ const LoginForm = (props) => {
               setValue("Username", value);
               setErrorLogin("");
             }}
-            value={value}
+            value={getValues("Username")}
             inputContainerStyle={{
               borderBottomWidth: 0.3,
               borderBottomColor: { COLORS }.disabled3,
@@ -171,13 +244,13 @@ const LoginForm = (props) => {
         render={({ onChange, onBlur, value }) => (
           <View style={{ flexDirection: "row" }}>
             <Input
-              placeholder="Contraseña"
+              placeholder="Contraseña de filemaker"
               placeholderTextColor={{ COLORS }.disabled1}
               onChangeText={(value) => {
                 setValue("Password", value);
                 setErrorLogin("");
               }}
-              value={value}
+              value={getValues("Password")}
               //hide/show password
 
               secureTextEntry={hidePassword}
@@ -218,7 +291,7 @@ const LoginForm = (props) => {
       </View>
 
       <View style={styles.forgetAccount}>
-        <Pressable onPress={() => props.nav.navigate("CreatePassword")}>
+        <Pressable onPress={() => props.nav.navigate("NoPassword")}>
           <Text
             style={[
               styles.textForgetAccount,
@@ -250,6 +323,7 @@ const LoginForm = (props) => {
             width: 200,
             marginTop: 28,
             marginBottom: 8,
+            borderRadius: 8,
           }}
           titleStyle={{
             color: COLORS.neutral,

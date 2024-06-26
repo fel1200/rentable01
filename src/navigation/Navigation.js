@@ -13,6 +13,8 @@ import CPSScreen from "../screens/CPSScreen";
 import PromoScreen from "../screens/PromoScreen";
 import WorksScreen from "../screens/WorksScreen";
 import ImageFullScreen from "../screens/ImageFullScreen";
+import NoPasswordScreen from "../screens/NoPasswordScreen";
+import MainScreen from "../screens/MainScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,11 +31,20 @@ export default function Navigation() {
     >
       {isSignedIn ? (
         <>
+          <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen name="ClientsScreen" component={ClientsScreen} />
           <Stack.Screen name="CPS" component={CPSScreen} />
           <Stack.Screen name="Promo" component={PromoScreen} />
           <Stack.Screen name="Works" component={WorksScreen} />
           <Stack.Screen name="ImageFullScreen" component={ImageFullScreen} />
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Selection" component={SelectionScreen} />
+          <Stack.Screen
+            name="CreatePassword"
+            component={CreatePasswordScreen}
+          />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="NoPassword" component={NoPasswordScreen} />
         </>
       ) : (
         <>
@@ -44,7 +55,13 @@ export default function Navigation() {
             component={CreatePasswordScreen}
           />
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="NoPassword" component={NoPasswordScreen} />
+          <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen name="ClientsScreen" component={ClientsScreen} />
+          <Stack.Screen name="CPS" component={CPSScreen} />
+          <Stack.Screen name="Promo" component={PromoScreen} />
+          <Stack.Screen name="Works" component={WorksScreen} />
+          <Stack.Screen name="ImageFullScreen" component={ImageFullScreen} />
         </>
       )}
     </Stack.Navigator>

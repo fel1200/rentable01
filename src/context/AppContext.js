@@ -21,6 +21,8 @@ export function AppProvider(props) {
   const [imageURLActive, setImageURLActive] = useState(undefined);
   const [isSignedIn, setIsSignedIn] = useState(false);
 
+  const [userActive, setUserActive] = useState(undefined);
+
   console.log("isSignedIn", isSignedIn);
   //get and set isSignedIn from storage
   useEffect(() => {
@@ -41,6 +43,8 @@ export function AppProvider(props) {
     setImageURLActive,
     isSignedIn,
     setIsSignedIn,
+    userActive,
+    setUserActive,
   };
   return (
     <AppContext.Provider value={valueContext}>{children}</AppContext.Provider>

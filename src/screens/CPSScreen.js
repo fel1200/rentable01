@@ -30,7 +30,7 @@ import { SearchBar } from "@rneui/themed";
 //To import icons
 import Icon from "react-native-vector-icons/AntDesign";
 
-const Billboards = ({ route, navigation }) => {
+const Billboards = ({ route }) => {
   const { platform, clientActive, setCPSActive } = useApp();
 
   console.log("route", route);
@@ -38,6 +38,10 @@ const Billboards = ({ route, navigation }) => {
   //depending on the type of CPS selected it renders the corresponding CPS
   //Espectaculares
   const typeOfElement = route.key;
+
+  const navigation = route.navigation;
+  console.log("navigation", navigation);
+
   //Vars to manage loading data it could be billboards or fences
   const [elements, setElements] = useState([]);
   const [loadingElements, setLoadingElements] = useState(false);
@@ -202,8 +206,8 @@ export default function CPSScreen({ navigation, route }) {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "billboards", title: "Espectaculares" },
-    { key: "fences", title: "Vallas" },
+    { key: "billboards", title: "Espectaculares", navigation: navigation },
+    { key: "fences", title: "Vallas", navigation: navigation },
   ]);
 
   const _handleIndexChange = (index) => setIndex(index);
@@ -255,7 +259,7 @@ export default function CPSScreen({ navigation, route }) {
           renderScene={_renderScene}
           renderTabBar={_renderTabBar}
           onIndexChange={_handleIndexChange}
-          navigation={navigation}
+          // navigation={navigation}
         />
       </View>
     </KeyboardAvoidingView>

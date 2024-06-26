@@ -136,7 +136,7 @@ export default function LoginScreen({ navigation }) {
           <View style={styles.dontHaveAccount}>
             <Text style={styles.textDontHaveAccount}>¿No tienes cuenta? </Text>
             {/* <Pressable onPress={() => navigation.navigate("CreatePassword")}> */}
-            <Pressable onPress={() => {}}>
+            <Pressable onPress={() => navigation.navigate("NoPassword")}>
               <Text
                 style={[
                   styles.textDontHaveAccount,
