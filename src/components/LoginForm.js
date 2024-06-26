@@ -30,6 +30,11 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 //Colors
 import { COLORS } from "../utils/constants";
 
+//method to escape symbols including @
+const escapeSymbols = (string) => {
+  return string.replace(/[-\/\\^$*+@?.()|[\]{}]/g, "\\$&");
+};
+
 const LoginForm = (props) => {
   //  Form control
   const {
@@ -57,14 +62,37 @@ const LoginForm = (props) => {
   };
 
   //Var and method to switch
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState(true);
 
   const onSubmit = async () => {
     setErrorLogin("");
     const username = getValues("Username");
     const password = getValues("Password");
+
+    //transform username for example @ to \"@\" and other symbols to avoid errors
+    const transformedUsername = escapeSymbols(username);
+    const transformedPassword = escapeSymbols(password);
+
     try {
-      const response = await login({ username, password });
+      const loginObject = {
+        query: [
+          {
+            Soc_AppUser: transformedUsername,
+            Soc_AppPass: transformedPassword,
+          },
+        ],
+        sort: [
+          {
+            fieldName: "Soc_AppUser",
+            sortOrder: "ascend",
+          },
+        ],
+        limit: "2000",
+      };
+      console.log("loginObject", loginObject);
+      const response = await login({ loginObject });
+      //with fake api
+      //const response = await login({ username, password });
 
       //console.log("responseLogin", response);
     } catch (e) {
@@ -83,7 +111,7 @@ const LoginForm = (props) => {
       //secure storage
       AsyncStorage.setItem("isSignedIn", "true");
 
-      props.nav.navigate("Clients");
+      props.nav.navigate("ClientsScreen");
     }
   }, [isLogged, props.nav]);
 

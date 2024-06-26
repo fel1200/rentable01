@@ -28,4 +28,6 @@ export const API_HOST_VALIDATE = "https://rentable.site/fmi/data/vLatest/";
 //To register, first fake, then real
 export const API_HOST_SIGNUP = "https://reqres.in/api/register";
 //To login, first fake, then real
-export const API_HOST_LOGIN = "https://reqres.in/api/login";
+//export const API_HOST_LOGIN = "https://reqres.in/api/login";
+export const API_HOST_LOGIN =
+  "https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find";

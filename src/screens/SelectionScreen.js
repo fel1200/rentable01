@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  StatusBar,
 } from "react-native";
 import React from "react";
 //colors constants
@@ -14,6 +15,8 @@ import { COLORS } from "../utils/constants";
 import MyAppText from "../components/componentStyles/MyAppText";
 //Hooks
 import useApp from "../hooks/useApp";
+//To import icons
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default function SplashScreen({ navigation }) {
   //Context global vars
@@ -49,6 +52,13 @@ export default function SplashScreen({ navigation }) {
 
   return (
     <View style={styles.bg}>
+      <Pressable
+        style={styles.backPressable}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrowleft" size={30} color={COLORS.primary1} />
+      </Pressable>
+
       <Image
         source={require("../assets/rentableSmallCom.png")}
         style={{
@@ -56,7 +66,7 @@ export default function SplashScreen({ navigation }) {
           height: 44,
           marginLeft: 16,
           marginTop: marginTopDependingScreen(),
-          alignSelf: "left",
+          alignSelf: "center",
         }}
       />
       <Image
@@ -64,7 +74,7 @@ export default function SplashScreen({ navigation }) {
         style={{
           width: 217,
           height: 144,
-          marginTop: marginTopDependingScreen(),
+          marginTop: marginTopDependingScreen() + 50,
           alignSelf: "center",
         }}
       />
@@ -80,10 +90,10 @@ export default function SplashScreen({ navigation }) {
             </Text>
             <Text style={styles.textInstructions} typeFont="Medium">
               Para usar la app, necesitas estar registrado previamente en el
-              sistema filemaker y después crear la contraseña de la app aquí
+              sistema filemaker y después iniciar sesión aquí
             </Text>
 
-            <Pressable
+            {/* <Pressable
               style={styles.buttonCreatePassword}
               onPress={goCreatePasswordScreen}
             >
@@ -109,7 +119,7 @@ export default function SplashScreen({ navigation }) {
               typeFont="Medium"
             >
               Después inicia sesión
-            </Text>
+            </Text> */}
             <Pressable onPress={goLoginScreen}>
               <View
                 style={[
@@ -142,9 +152,15 @@ const styles = StyleSheet.create({
   bg: {
     flex: 1,
     width: "100%",
-    backgroundColor: COLORS.neutral,
     alignItems: "center",
+    paddingTop: StatusBar.currentHeight + 52,
+    backgroundColor: COLORS.neutral,
   },
+  backPressable: {
+    alignSelf: "flex-start",
+    marginLeft: 8,
+  },
+
   line: {
     width: "85%",
     height: 0.5,
@@ -183,7 +199,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   boxTitleLogin: {
-    marginTop: 16,
+    marginTop: 32,
     width: 250,
     height: 60,
     borderRadius: 12,
@@ -257,6 +273,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
+    height: 80,
   },
 
   grow: {

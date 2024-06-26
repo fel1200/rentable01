@@ -102,7 +102,7 @@ export default function ClientsScreen({ navigation }) {
   const goToCPS = (item) => {
     setClientActive(item);
     //navigation to CPS with type = "Espectaculares"
-    navigation.navigate("CPS", { type: "Espectaculares" });
+    navigation.navigate("CPS");
   };
 
   //function to go to selection screen

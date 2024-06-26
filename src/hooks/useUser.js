@@ -20,22 +20,31 @@ export default function useUser() {
   //fix the error of await in the function
 
   //Función de login async
-  const login = async ({ username, password }) => {
+  const login = async ({ loginObject }) => {
     //method to refresh the state
     setStateUser({ loading: true, error: false, logged: false });
 
     try {
-      console.log("username", username);
-      console.log("password", password);
-      const response = await loginService({ username, password });
+      // console.log("username", username);
+      // console.log("password", password);
+      console.log("loginObject", loginObject);
+      const response = await loginService({ loginObject });
       console.log("responseLogin", response);
-      if (!response.token) {
+      // if (!response.token) {
+      //   throw new Error("Error en login");
+      // }
+      if (response.data?.fieldData?.length !== 0) {
+        setUser(response.fieldData);
+        setStateUser({ loading: false, error: false, logged: true });
+      } else {
+        setStateUser({ loading: false, error: true, logged: false });
         throw new Error("Error en login");
       }
-      setToken(response.token);
-      await SecureStore.setItemAsync("token", response.token);
-      setStateUser({ loading: false, error: false, logged: true });
-      console.log("token", token);
+
+      // setToken(response.token);
+      // await SecureStore.setItemAsync("token", response.token);
+
+      // console.log("token", token);
     } catch (e) {
       setStateUser({ loading: false, error: true, logged: false });
       throw new Error(e);
