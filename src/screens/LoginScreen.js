@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     height: 600,
     backgroundColor: COLORS.disabled4,
     //effects shadow
-    shadowColor: "#000",
+    shadowColor: COLORS.primary21,
     shadowOffset: {
       width: 0,
       height: 2,

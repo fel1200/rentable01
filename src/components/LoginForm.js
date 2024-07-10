@@ -50,7 +50,7 @@ const LoginForm = (props) => {
   console.log("values", getValues());
 
   //data from context
-  const { isSignedIn, setIsSignedIn } = useApp();
+  const { isSignedIn, setIsSignedIn, userActive, setUserActive } = useApp();
 
   //Login hook
   const { isLoginLoading, hasLoginError, login, isLogged, user, setUser } =
@@ -98,6 +98,7 @@ const LoginForm = (props) => {
       const response = await login({ loginObject });
       console.log("responseLoginForm", response);
       setUser(response?.data);
+      setUserActive(response?.data);
       //with fake api
       //const response = await login({ username, password });
     } catch (e) {
@@ -122,6 +123,7 @@ const LoginForm = (props) => {
         console.log("getValues", getValues("Password"));
         console.log("AsyncStorage user", AsyncStorage.getItem("username"));
         console.log("AsyncStorage password", AsyncStorage.getItem("password"));
+
         if (
           getValues("Username") === "" &&
           getValues("Password") === "" &&
@@ -173,9 +175,10 @@ const LoginForm = (props) => {
       //save data of user in async storage
       //Before saving we need to stringify the object
       console.log("User stringified", JSON.stringify(user));
-      AsyncStorage.setItem("user", JSON.stringify(user));
+
       //secure storage
       AsyncStorage.setItem("isSignedIn", "true");
+
       if (remember) {
         console.log("GetValues", getValues("Username"));
         console.log("GetValues", getValues("Password"));

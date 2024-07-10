@@ -70,9 +70,9 @@ export default function SplashScreen({ navigation }) {
         }}
       />
       <Image
-        source={require("../assets/buildings.png")}
+        source={require("../assets/buildings2.png")}
         style={{
-          width: 217,
+          width: 237,
           height: 144,
           marginTop: marginTopDependingScreen() + 50,
           alignSelf: "center",
@@ -85,9 +85,9 @@ export default function SplashScreen({ navigation }) {
             <Text style={styles.textWelcomeBold} typeFont="Medium">
               Hola
             </Text>
-            <Text style={styles.textWelcomeLight} typeFont="Medium">
+            {/* <Text style={styles.textWelcomeLight} typeFont="Medium">
               Bienvenido a Rentable management
-            </Text>
+            </Text> */}
             <Text style={styles.textInstructions} typeFont="Medium">
               Para usar la app, necesitas estar registrado previamente en el
               sistema filemaker y después iniciar sesión aquí
@@ -179,12 +179,11 @@ const styles = StyleSheet.create({
   },
 
   textWelcomeBold: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
-    color: COLORS.secondary2,
+    color: COLORS.primary1,
     marginTop: 16,
   },
-
   textWelcomeLight: {
     marginTop: 8,
     fontSize: 16,

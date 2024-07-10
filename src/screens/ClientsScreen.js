@@ -50,10 +50,11 @@ export default function ClientsScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       //Get data from user async storage
-      const userFromStorage = await AsyncStorage.getItem("user");
-      if (userFromStorage) {
-        setUserActive(JSON.parse(userFromStorage));
-      }
+      // const userFromStorage = await AsyncStorage.getItem("user");
+      // console.log("userFromStorage in main", userFromStorage);
+      // if (userFromStorage) {
+      //   setUserActive(JSON.parse(userFromStorage));
+      // }
 
       setLoadingClients(true);
       setErrorLoadingClients("");

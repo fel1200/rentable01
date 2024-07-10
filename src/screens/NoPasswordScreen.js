@@ -131,13 +131,15 @@ const styles = StyleSheet.create({
   contentScrollCenter: {
     width: "80%",
     alignItems: "center",
+    justifyContent: "center",
   },
 
   textWelcomeBold: {
     fontSize: 32,
     fontWeight: "bold",
-    color: COLORS.secondary2,
+    color: COLORS.primary1,
     marginTop: 16,
+    textAlign: "center",
   },
 
   textWelcomeLight: {

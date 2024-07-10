@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     backgroundColor: COLORS.disabled4,
     borderRadius: 8,
-    shadowColor: "#000",
+    shadowColor: COLORS.primary21,
     shadowOffset: {
       width: 0,
       height: 1,

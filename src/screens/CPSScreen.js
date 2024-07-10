@@ -31,7 +31,7 @@ import { SearchBar } from "@rneui/themed";
 import Icon from "react-native-vector-icons/AntDesign";
 
 const Billboards = ({ route }) => {
-  const { platform, clientActive, setCPSActive } = useApp();
+  const { platform, clientActive, setCPSActive, userActive } = useApp();
 
   console.log("route", route);
   //method to render both Espectaculares and Vallas
