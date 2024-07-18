@@ -10,28 +10,38 @@ import {
 import * as SecureStore from "expo-secure-store";
 
 //Method to get the information from CPS given an object of CPS_RK_Cliente
-export async function getCPSInfo(cpsObject) {
+export async function getCPSInfo(cpsObject, typeOfElement) {
   try {
+    let URL;
+    let token;
+    console.log(`Starting getting CPS info ${typeOfElement}`);
+    if (typeOfElement === "billboards") {
+      URL = `${API_HOST}Rentable_08_Servicios/layouts/API_CPS/_find`;
+      token = await getNewToken("Rentable_08_Servicios");
+    } else if (typeOfElement === "fences") {
+      URL = `${API_HOST}EasySoft%20Data/layouts/API_Contratos/_find`;
+      token = await getNewToken("EasySoft%20Data");
+    }
+
     //First check if last token is still valid
 
     //First call to get the token
     //const token = await getNewToken();
-    const token = await getNewToken("Rentable_08_Servicios");
     if (token !== null) {
-      console.log("token", token);
-      console.log("cpsObject", cpsObject);
+      console.log(`token ${typeOfElement}`, token);
+      console.log(`${typeOfElement}Object`, cpsObject);
       //Second call to get the info
-      const response = await fetch(
-        `${API_HOST}Rentable_08_Servicios/layouts/API_CPS/_find`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(cpsObject),
-        }
-      );
+      // const response = await fetch(
+      //   `${API_HOST}Rentable_08_Servicios/layouts/API_CPS/_find`,
+
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(cpsObject),
+      });
       const responseJson = await response.json();
       console.log("responseJson", responseJson);
       if (
@@ -52,7 +62,7 @@ export async function getCPSInfo(cpsObject) {
           ${responseJson?.messages[0]?.message}`
         );
       } else {
-        return null;
+        throw new Error(`Error al obtener token`);
       }
     }
   } catch (error) {
@@ -66,8 +76,8 @@ export async function getClientsInfo(clientsObject) {
     //First check if last token is still valid
 
     //First call to get the token
-    //const token = await getNewToken();
-    const token = await getNewToken("Rentable_06_Socios");
+    const token = await getToken("Rentable_06_Socios");
+    //const token = await getNewToken("Rentable_06_Socios");
     if (token !== null) {
       console.log("token", token);
       console.log("clientObject", clientsObject);
@@ -234,7 +244,7 @@ export async function getWorkInfo(workObject) {
 //Method to get a new token
 export async function getNewToken(database) {
   try {
-    console.log("starting get new token", `${API_HOST}${database}/sessions`);
+    console.log(`Starting getting new token ${database}`);
     const response = await fetch(`${API_HOST}${database}/sessions`, {
       method: "POST",
       headers: {
@@ -243,17 +253,25 @@ export async function getNewToken(database) {
       },
     });
     const responseJson = await response.json();
-    console.log("responseJson", responseJson);
+    console.log(` responseJson ${database}`, responseJson);
     //console.log("responseJsonCode", responseJson?.messages[0].code);
     //console.log("responseJsonMessage", responseJson?.messages[0].message);
-    console.log("responseJsonToken", responseJson?.messages[0].message);
+    console.log(
+      "responseJsonToken",
+      database,
+      responseJson?.messages[0].message
+    );
 
     if (
       responseJson?.messages[0]?.code === "0" &&
       responseJson?.messages[0]?.message === "OK"
     ) {
-      //We save the token in secure store
-      await SecureStore.setItemAsync("token", responseJson?.response?.token);
+      //We save the token in secure store with token and databasename
+      //replace special characters of the database to avoid errors in securestore
+      const newDatabase = database.replace(/[^a-zA-Z0-9]/g, "");
+      const tokenName = `token-${newDatabase}`;
+
+      await SecureStore.setItemAsync(tokenName, responseJson?.response?.token);
       console.log("responseJsonToken", responseJson?.response?.token);
       return responseJson?.response?.token;
     } else if (
@@ -276,9 +294,15 @@ export async function getNewToken(database) {
 //Method to check the current token
 export async function getToken(database) {
   try {
+    //replace special characters of the database to avoid errors in securestore
+    const newDatabase = database.replace(/[^a-zA-Z0-9]/g, "");
     //First we check if we have a token in secure store
-    const tokenFromSecureStore = await SecureStore.getItemAsync("token");
+
+    let tokenFromSecureStore = await SecureStore.getItemAsync(
+      `token-${newDatabase}`
+    );
     console.log("token from securestore", tokenFromSecureStore);
+    tokenFromSecureStore = null;
     if (tokenFromSecureStore !== null && tokenFromSecureStore !== undefined) {
       //If we have a tokenFromSecureStore, we check if it is valid
       const tokenIsValid = await checkTokenIsValid(
@@ -361,6 +385,8 @@ export async function loginService({ loginObject }) {
       responseJson?.messages[0]?.code === "0" &&
       responseJson?.messages[0]?.message === "OK"
     ) {
+      //We save the token in secure store
+      //to-do: save user data in secure store
       return responseJson?.response;
     } else if (
       //error message

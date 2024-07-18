@@ -25,6 +25,8 @@ import useApp from "../hooks/useApp";
 import { getCPSInfo, getNewToken } from "../api/connections";
 //Component CPS
 import CPS from "../components/CPS";
+//Component CPSFences
+import CPSFences from "../components/CPSFences";
 //SearchBar component
 import { SearchBar } from "@rneui/themed";
 //To import icons
@@ -33,14 +35,14 @@ import Icon from "react-native-vector-icons/AntDesign";
 const Billboards = ({ route }) => {
   const { platform, clientActive, setCPSActive, userActive } = useApp();
 
-  console.log("route", route);
+  //console.log("route", route);
   //method to render both Espectaculares and Vallas
   //depending on the type of CPS selected it renders the corresponding CPS
   //Espectaculares
   const typeOfElement = route.key;
 
   const navigation = route.navigation;
-  console.log("navigation", navigation);
+  //console.log("navigation", navigation);
 
   //Vars to manage loading data it could be billboards or fences
   const [elements, setElements] = useState([]);
@@ -48,58 +50,102 @@ const Billboards = ({ route }) => {
   const [errorLoadingElements, setErrorLoadingElements] = useState("");
 
   const [filteredElements, setFilteredElements] = useState([]);
-  console.log("Cliente activo", clientActive);
+
+  const [elementsFences, setElementsFences] = useState([]);
+  const [loadingElementsFences, setLoadingElementsFences] = useState(false);
+  const [errorLoadingElementsFences, setErrorLoadingElementsFences] =
+    useState("");
+  const [filteredElementsFences, setFilteredElementsFences] = useState([]);
+
+  //console.log("Cliente activo", clientActive);
 
   const clientActivePK = clientActive?.fieldData?.Soc_PK;
-  console.log("Client active PK", clientActivePK);
+  // console.log("Client active PK", clientActivePK);
   // CPS_RK_Cliente: "75FB97E9-90E4-4930-95AD-953EBCF20E53",
 
   //Useeffect to get token
   useEffect(() => {
     (async () => {
-      setLoadingElements(true);
-      setErrorLoadingElements("");
+      if (typeOfElement === "billboards") {
+        setLoadingElements(true);
+        setErrorLoadingElements("");
+      } else {
+        setLoadingElementsFences(true);
+        setErrorLoadingElementsFences("");
+      }
       try {
         //Creating object to consult info of a hardcoded object
         //first with generic, then with billboards or fences
-        const elementObject = {
-          query: [
-            {
-              CPS_RK_Cliente: clientActivePK,
-              CPS_Estatus: "AUTORIZADA",
-            },
-          ],
-          sort: [
-            {
-              fieldName: "CPS_ID_CPS",
-              sortOrder: "ascend",
-            },
-          ],
-          limit: "200",
-        };
 
         //depending on the type of element it will be billboards or fences
         let response;
+        let elementObject;
         if (typeOfElement === "billboards") {
-          response = await getCPSInfo(elementObject);
+          elementObject = {
+            query: [
+              {
+                CPS_RK_Cliente: clientActivePK,
+                CPS_Estatus: "AUTORIZADA",
+              },
+            ],
+            sort: [
+              {
+                fieldName: "CPS_ID_CPS",
+                sortOrder: "ascend",
+              },
+            ],
+            limit: "200",
+          };
+          response = await getCPSInfo(elementObject, typeOfElement);
         } else {
+          elementObject = {
+            query: [
+              {
+                "ID Cliente": clientActivePK,
+                // "ID Cliente": "5A3454D4-4588-4D33-8132-F58363AC88C6",
+              },
+            ],
+            sort: [
+              {
+                fieldName: "ID CONTRATO",
+                sortOrder: "ascend",
+              },
+            ],
+            limit: "200",
+          };
           //While it is not implemented, it will be a empty array
-          response = [];
+          response = await getCPSInfo(elementObject, typeOfElement);
         }
 
-        console.log(` ${typeOfElement} response`, response);
-        setLoadingElements(false);
+        //console.log(` ${typeOfElement} response`, response);
+        if (typeOfElement === "billboards") {
+          setLoadingElements(false);
+        } else {
+          setLoadingElementsFences(false);
+        }
         if (response !== null && response !== undefined) {
-          setElements(response?.data);
-          setFilteredElements(response?.data);
+          if (typeOfElement === "billboards") {
+            setElements(response?.data);
+            setFilteredElements(response?.data);
+            console.log(` ${typeOfElement} elements`, filteredElements);
+          } else {
+            setElementsFences(response?.data);
+            setFilteredElementsFences(response?.data);
+            console.log(` ${typeOfElement} elements`, filteredElementsFences);
+          }
         } else {
           console.log(`Error getting info from ${typeOfElement}`);
           throw new Error(`Error al obtener información de ${typeOfElement}`);
         }
       } catch (error) {
         console.log(error);
-        setLoadingElements(false);
-        setErrorLoadingElements(`Error: ${error.message}`);
+        if (typeOfElement === "billboards") {
+          setLoadingElements(false);
+          setErrorLoadingElements(`Error: ${error.message}`);
+        } else {
+          setLoadingElementsFences(false);
+          setErrorLoadingElementsFences(`Error: ${error.message}`);
+        }
       }
     })();
   }, [clientActivePK]);
@@ -157,11 +203,19 @@ const Billboards = ({ route }) => {
       {loadingElements && typeOfElement !== "fences" && (
         <View style={styles.sumarizeResults}>
           <Text style={styles.textSumarizeResults} typeFont="Regular">
-            {`Cargando CPS activos ...`}
+            {`Cargando CPS de espectaculares ...`}
           </Text>
         </View>
       )}
-      {!loadingElements && typeOfElement !== "fences" && (
+      {loadingElementsFences && typeOfElement === "fences" && (
+        <View style={styles.sumarizeResults}>
+          <Text style={styles.textSumarizeResults} typeFont="Regular">
+            {`Cargando CPS de vallas ...`}
+          </Text>
+        </View>
+      )}
+
+      {!loadingElementsFences && typeOfElement !== "fences" && (
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
@@ -190,11 +244,38 @@ const Billboards = ({ route }) => {
           </ScrollView>
         </View>
       )}
-      {typeOfElement === "fences" && (
-        <View style={styles.sumarizeResults}>
-          <Text style={styles.textSumarizeResults} typeFont="Regular">
-            {`Pantalla de vallas se encuentra en construcción...`}
-          </Text>
+      {!loadingElements && typeOfElement === "fences" && (
+        // <View style={styles.sumarizeResults}>
+        //   <Text style={styles.textSumarizeResults} typeFont="Regular">
+        //     {`Pantalla de vallas se encuentra en construcción...`}
+        //   </Text>
+        // </View>
+        <View>
+          <View style={styles.sumarizeResults}>
+            <Text style={styles.textSumarizeResults} typeFont="Regular">
+              {`${filteredElementsFences?.length} CPS encontrados`}
+            </Text>
+          </View>
+          <View style={styles.line} />
+
+          <ScrollView
+            contentContainerStyle={styles.grow}
+            style={styles.scrollView}
+          >
+            {errorLoadingElements && (
+              <Text style={styles.error} typeFont="Regular">
+                {errorLoadingElements}
+              </Text>
+            )}
+            {!errorLoadingElements &&
+              filteredElementsFences?.map((item, index) => (
+                <CPSFences
+                  item={item}
+                  key={item?.fieldData["Id Contrato"]}
+                  onPressGoToPromos={() => goToPromos(item)}
+                />
+              ))}
+          </ScrollView>
         </View>
       )}
     </View>
