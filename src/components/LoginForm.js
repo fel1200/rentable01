@@ -29,7 +29,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 //Colors
 import { COLORS } from "../utils/constants";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+//handle errors
+import { getErrorMessage } from "../utils/errorHandler";
 
 //method to escape symbols including @
 const escapeSymbols = (string) => {
@@ -97,13 +99,14 @@ const LoginForm = (props) => {
       console.log("loginObject", loginObject);
       const response = await login({ loginObject });
       console.log("responseLoginForm", response);
+
       setUser(response?.data);
       setUserActive(response?.data);
       //with fake api
       //const response = await login({ username, password });
     } catch (e) {
       console.log("error", e);
-      setErrorLogin(e.message);
+      setErrorLogin(getErrorMessage(e.message, "Login"));
       //set errors with value in login
       //Check if exist error in errors.password if not create
     }

@@ -5,44 +5,42 @@ import React from "react";
 //Colors
 import { COLORS } from "../utils/constants.js";
 
-export default function CPS(props) {
-  const { item, onPressGoToPromos } = props;
-  const cps_id_cps = item?.fieldData?.CPS_ID_CPS;
-  const cps_cliente = item?.fieldData?.CPS_Cliente;
-  const cps_agencia = item?.fieldData?.CPS_Agencia;
-  const cps_estatus = item?.fieldData?.CPS_Estatus;
-  const cps_ejecutivo = item?.fieldData?.CPS_Ejecutivo;
-  const cps_campania = item?.fieldData["CPS_Campania(1)"];
-  const cps_fecha_inicio = item?.fieldData?.CPS_FechaGenerado;
-  // const cps_fecha_fin = item?.fieldData?.CPS_Fecha_Fin;
+export default function PromoFences(props) {
+  const { item, onPressGoToWorks } = props;
+  const cpsd_id_anuncio = item?.fieldData?.CPSD_ID_Anuncio;
+  const cpsd_campana = item?.fieldData?.CPSD_Campana;
+  //const cps_agencia = item?.fieldData?.CPSD_Agencia;
+  const cpsd_ubicacion = item?.fieldData?.CPSD_Ubicacion;
+  const cpsd_referencia = item?.fieldData?.CPSD_Referencia;
+  const cpsd_delegacion = item?.fieldData?.CPSD_Delegacion;
+  //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //console.log("item", item);
   return (
     <View style={styles.bg}>
-      <Pressable style={styles.mainContainer} onPress={onPressGoToPromos}>
+      <Pressable style={styles.mainContainer} onPress={onPressGoToWorks}>
         <View style={styles.leftSection}>
           <View style={styles.leftSectionSquare}>
-            <Text style={styles.textClient} numberOfLines={3}>
-              {cps_cliente}
+            <Text style={styles.textClient} numberOfLines={7}>
+              {cpsd_campana}
             </Text>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Text style={styles.textNumberCPS}>{`CPS: ${cps_id_cps}`}</Text>
-          {/* <Text style={styles.textGenericCPS}>{`Cliente: ${cps_cliente}`}</Text> */}
-          <Text style={styles.textGenericCPS}>{`Agencia: ${cps_agencia}`}</Text>
-          <Text style={styles.textGenericCPS}>{`Estatus: ${cps_estatus}`}</Text>
+          <Text
+            style={styles.textNumberCPS}
+          >{`Anuncio: ${cpsd_id_anuncio}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Campaña: ${cps_campania}`}</Text>
+          >{`Campaña: ${cpsd_campana}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Ejecutivo:${cps_ejecutivo}`}</Text>
+          >{`Ubicación: ${cpsd_ubicacion}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Generado:${cps_fecha_inicio}`}</Text>
-          {/* <Text
+          >{`Campaña: ${cpsd_referencia}`}</Text>
+          <Text
             style={styles.textGenericCPS}
-          >{`Fecha fin:${cps_fecha_fin}`}</Text> */}
+          >{`Delegación:${cpsd_delegacion}`}</Text>
         </View>
       </Pressable>
     </View>
@@ -65,11 +63,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.4,
+
     elevation: 2,
   },
   mainContainer: {
     width: "100%",
-    height: 160,
+    height: 190,
     flex: 1,
     flexDirection: "row",
   },
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   leftSectionSquare: {
-    margin: 6,
+    margin: 8,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
 
   textClient: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
     color: COLORS.secondary1,
   },

@@ -34,12 +34,16 @@ export default function useUser() {
       // if (!response.token) {
       //   throw new Error("Error en login");
       // }
-      if (response !== null) {
+      if (
+        response !== null &&
+        response !== undefined &&
+        response.data !== null
+      ) {
         setStateUser({ loading: false, error: false, logged: true });
         return response;
       } else {
         setStateUser({ loading: false, error: true, logged: false });
-        throw new Error("Error en login");
+        throw new Error("");
       }
 
       // setToken(response.token);

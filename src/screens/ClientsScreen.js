@@ -107,6 +107,9 @@ export default function ClientsScreen({ navigation }) {
         clientItem.recordId?.includes(search) ||
         clientItem.fieldData?.Soc_Denominacion?.toLowerCase().includes(
           search.toLowerCase()
+        ) ||
+        clientItem.fieldData?.Soc_Telefono1?.toLowerCase().includes(
+          search.toLowerCase()
         )
     );
     //console.log("searchedCPS", searchedCPS);
@@ -276,5 +279,5 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 8,
   },
-  grow: { flexGrow: 1, paddingBottom: 28, backgroundColor: COLORS.white },
+  grow: { flexGrow: 1, paddingBottom: 310, backgroundColor: COLORS.white },
 });

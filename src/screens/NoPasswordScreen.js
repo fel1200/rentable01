@@ -93,7 +93,8 @@ export default function SplashScreen({ navigation }) {
             </Text>
             <Text style={styles.textInstructions} typeFont="Medium">
               Si aún no estás registrado o tu contraseña no funciona, favor de
-              contactar al administrador de filemaker para realizar el registro
+              contactar al administrador de filemaker
+              (notificacion@rentable.com) para realizar el registro o
               reestablecimiento de la contraseña
             </Text>
           </View>
@@ -144,14 +145,14 @@ const styles = StyleSheet.create({
 
   textWelcomeLight: {
     marginTop: 8,
-    fontSize: 16,
+    fontSize: 18,
     color: COLORS.disabled0,
     textAlign: "center",
   },
 
   textInstructions: {
     marginTop: 16,
-    fontSize: 16,
+    fontSize: 18,
     color: COLORS.disabled0,
     textAlign: "center",
   },

@@ -7,12 +7,14 @@ import { COLORS } from "../utils/constants.js";
 
 export default function CPSFences(props) {
   const { item, onPressGoToPromos } = props;
-  const cps_id_contrato = item?.fieldData["Id Contrato"];
+  const cps_id_contrato = item?.fieldData["ID Contrato"];
   const cps_cliente = item?.fieldData?.Cliente;
   const cps_agencia = item?.fieldData?.Agencia;
-  const cps_estatus = item?.fieldData["Id Ejecutivo"];
+  const cps_estatus = item?.fieldData?.Estatus;
   //   const cps_ejecutivo = item?.fieldData?.CPS_Ejecutivo;
-  const cps_campania = item?.fieldData["Campania"];
+  const cps_campania = item?.fieldData?.Campania;
+  const cps_fecha_inicio = item?.fieldData["Fecha Inicio"];
+  const cps_fecha_fin = item?.fieldData["Fecha Termino"];
   //console.log("item", item);
   return (
     <View style={styles.bg}>
@@ -31,6 +33,13 @@ export default function CPSFences(props) {
           <Text
             style={styles.textGenericCPS}
           >{`Campaña: ${cps_campania}`}</Text>
+          <Text
+            style={styles.textGenericCPS}
+          >{`Fecha inicio: ${cps_fecha_inicio}`}</Text>
+          <Text
+            style={styles.textGenericCPS}
+          >{`Fecha término: ${cps_fecha_fin}`}</Text>
+
           {/* <Text
             style={styles.textGenericCPS}
           >{`Ejecutivo:${cps_ejecutivo}`}</Text> */}

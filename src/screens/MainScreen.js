@@ -101,6 +101,14 @@ export default function SplashScreen({ navigation }) {
     return "";
   };
 
+  const logout = () => {
+    if (userActive !== null && userActive !== undefined) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Login");
+    }
+  };
+
   return (
     <View style={styles.bg}>
       <LinearGradient
@@ -162,10 +170,7 @@ export default function SplashScreen({ navigation }) {
             </MaskedView>
           </View>
           <View style={styles.logoutSection}>
-            <Pressable
-              style={styles.boxTitleLogin}
-              onPress={() => navigation.goBack()}
-            >
+            <Pressable style={styles.boxTitleLogin} onPress={() => logout()}>
               <View style={styles.leftSideBoxTitleLogin}>
                 <Image
                   source={require("../assets/logout.png")}

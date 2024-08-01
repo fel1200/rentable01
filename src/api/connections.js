@@ -128,33 +128,37 @@ export async function getClientsInfo(clientsObject) {
 }
 
 //Method to get the information from Promo given an object of CPS_RK_Cliente
-export async function getPromoInfo(promoObject) {
+export async function getPromoInfo(promoObject, typeOfElement) {
   try {
     //First check if last token is still valid
 
     //First call to get the token
     //const token = await getNewToken();
-    const token = await getNewToken("Rentable_08_Servicios");
+    let URL;
+    let token;
+    console.log(`Starting getting Promo info ${typeOfElement}`);
+    console.log(`promoObject ${typeOfElement}`, promoObject);
+    if (typeOfElement === "billboards") {
+      URL = `${API_HOST}Rentable_08_Servicios/layouts/API_CPSDetalle/_find`;
+      token = await getNewToken("Rentable_08_Servicios");
+    } else {
+      URL = `${API_HOST}EasySoft%20Data/layouts/API_Trabajos/_find`;
+      token = await getNewToken("EasySoft%20Data");
+    }
     if (token !== null) {
       console.log("token", token);
       console.log("promoObject", promoObject);
       //Second call to get the info of clients
-      console.log(
-        "URL api host",
-        `${API_HOST}Rentable_08_Servicios/layouts/API_CPSDetalle/_find`
-      );
+      console.log("URL api host", `${URL}`);
       //url: 'https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find',
-      const response = await fetch(
-        `${API_HOST}Rentable_08_Servicios/layouts/API_CPSDetalle/_find`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(promoObject),
-        }
-      );
+      const response = await fetch(`${URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(promoObject),
+      });
       const responseJson = await response.json();
       //console.log("responseJson", responseJson);
       if (
@@ -185,33 +189,36 @@ export async function getPromoInfo(promoObject) {
 }
 
 //Method to get the information from Work given an object of promo
-export async function getWorkInfo(workObject) {
+export async function getWorkInfo(workObject, typeOfElement) {
   try {
     //First check if last token is still valid
 
     //First call to get the token
     //const token = await getNewToken();
-    const token = await getNewToken("DBR_Op_NC");
+    let URL;
+    let token;
+    console.log(`Starting getting Work info ${typeOfElement}, ${workObject}`);
+    if (typeOfElement === "billboards") {
+      URL = `${API_HOST}DBR_Op_NC/layouts/API_Trabajos/_find`;
+      token = await getNewToken("DBR_Op_NC");
+    } else {
+      URL = `${API_HOST}EasySoft%20Data/layouts/API_Trabajos/_find`;
+      token = await getNewToken("EasySoft%20Data");
+    }
     if (token !== null) {
       console.log("token", token);
       console.log("workObject", workObject);
       //Second call to get the info of clients
-      console.log(
-        "URL api host",
-        `${API_HOST}DBR_Op_NC/layouts/API_Trabajos/_find`
-      );
+      console.log("URL api host", `${URL}`);
       //url: 'https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find',
-      const response = await fetch(
-        `${API_HOST}DBR_Op_NC/layouts/API_Trabajos/_find`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(workObject),
-        }
-      );
+      const response = await fetch(`${URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(workObject),
+      });
       const responseJson = await response.json();
       //console.log("responseJson", responseJson);
       if (
@@ -393,10 +400,7 @@ export async function loginService({ loginObject }) {
       responseJson?.messages[0]?.code !== "0"
     ) {
       console.log("Response json message", responseJson?.messages[0]?.message);
-      throw new Error(
-        `Error al iniciar sesión,
-        ${responseJson?.messages[0]?.message}`
-      );
+      throw new Error(`${responseJson?.messages[0]?.message}`);
     } else {
       return null;
     }

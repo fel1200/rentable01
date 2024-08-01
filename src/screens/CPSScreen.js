@@ -17,12 +17,14 @@ import React, { useEffect, useState } from "react";
 import { TabView, SceneMap } from "react-native-tab-view";
 //colors constants
 import { COLORS } from "../utils/constants";
+//Handler for errors
+import { getErrorMessage } from "../utils/errorHandler";
 //Styled text
 import MyAppText from "../components/componentStyles/MyAppText";
 //Hooks
 import useApp from "../hooks/useApp";
 //API
-import { getCPSInfo, getNewToken } from "../api/connections";
+import { getCPSInfo } from "../api/connections";
 //Component CPS
 import CPS from "../components/CPS";
 //Component CPSFences
@@ -35,7 +37,6 @@ import Icon from "react-native-vector-icons/AntDesign";
 const Billboards = ({ route }) => {
   const { platform, clientActive, setCPSActive, userActive } = useApp();
 
-  //console.log("route", route);
   //method to render both Espectaculares and Vallas
   //depending on the type of CPS selected it renders the corresponding CPS
   //Espectaculares
@@ -127,11 +128,11 @@ const Billboards = ({ route }) => {
           if (typeOfElement === "billboards") {
             setElements(response?.data);
             setFilteredElements(response?.data);
-            console.log(` ${typeOfElement} elements`, filteredElements);
+            console.log(` ${typeOfElement} elements`, response?.data);
           } else {
             setElementsFences(response?.data);
             setFilteredElementsFences(response?.data);
-            console.log(` ${typeOfElement} elements`, filteredElementsFences);
+            console.log(` ${typeOfElement} elements`, response?.data);
           }
         } else {
           console.log(`Error getting info from ${typeOfElement}`);
@@ -141,10 +142,12 @@ const Billboards = ({ route }) => {
         console.log(error);
         if (typeOfElement === "billboards") {
           setLoadingElements(false);
-          setErrorLoadingElements(`Error: ${error.message}`);
+          setErrorLoadingElements(`${getErrorMessage(error.message, "CPS")}`);
         } else {
           setLoadingElementsFences(false);
-          setErrorLoadingElementsFences(`Error: ${error.message}`);
+          setErrorLoadingElementsFences(
+            `${getErrorMessage(error.message, "CPS")}`
+          );
         }
       }
     })();
@@ -156,6 +159,11 @@ const Billboards = ({ route }) => {
     setSearch(search);
   };
 
+  const [searchFences, setSearchFences] = useState("");
+  const updateSearchFences = (search) => {
+    setSearchFences(search);
+  };
+
   //search filtered elements
   useEffect(() => {
     //console.log("CPS before", cps);
@@ -165,7 +173,13 @@ const Billboards = ({ route }) => {
         cpsItem.fieldData?.CPS_Agencia?.toLowerCase().includes(
           search.toLowerCase()
         ) ||
+        cpsItem.fieldData?.CPS_Estatus?.toLowerCase().includes(
+          search.toLowerCase()
+        ) ||
         cpsItem.fieldData?.CPS_Cliente?.toLowerCase().includes(
+          search.toLowerCase()
+        ) ||
+        cpsItem.fieldData?.CPS_Ejecutivo?.toLowerCase().includes(
           search.toLowerCase()
         ) ||
         //Next one accesing with square bracket, because has (1) in atrribute's name
@@ -178,6 +192,28 @@ const Billboards = ({ route }) => {
     //console.log("After", filteredCPS);
   }, [search, elements]);
 
+  //search filtered elements for fences
+  useEffect(() => {
+    console.log("CPS searched fences ", searchFences);
+    const searchedElementsFences = elementsFences?.filter(
+      (cpsItem) =>
+        cpsItem.fieldData?.["ID Contrato"].toString().includes(searchFences) ||
+        cpsItem.fieldData?.Agencia?.toLowerCase().includes(
+          searchFences.toLowerCase()
+        ) ||
+        cpsItem.fieldData?.Estatus?.toLowerCase().includes(
+          searchFences.toLowerCase()
+        ) ||
+        //Next one accesing with square bracket, because has (1) in atrribute's name
+        cpsItem.fieldData["Campania"]
+          ?.toLowerCase()
+          .includes(searchFences.toLowerCase())
+    );
+    //console.log("searchedCPS", searchedCPS);
+    setFilteredElementsFences(searchedElementsFences);
+    //console.log("After", filteredCPS);
+  }, [searchFences, elementsFences]);
+
   //Method to go an specific CPS
   const goToPromos = (item) => {
     setCPSActive(item);
@@ -185,14 +221,22 @@ const Billboards = ({ route }) => {
     navigation.navigate("Promo");
   };
 
+  if (typeOfElement === "billboards") {
+    console.log(`Loading elements ${typeOfElement}`, loadingElements);
+  } else {
+    console.log(`Loading elements ${typeOfElement}`, loadingElementsFences);
+  }
+
   return (
     <View style={styles.scene}>
       <View style={styles.searchBarSection}>
         <SearchBar
           autoCorrect={false}
           placeholder="Buscar contratos..."
-          onChangeText={updateSearch}
-          value={search}
+          onChangeText={
+            typeOfElement === "billboards" ? updateSearch : updateSearchFences
+          }
+          value={typeOfElement === "billboards" ? search : searchFences}
           platform={platform ? platform : "android"}
           containerStyle={styles.inputContainerSearcher}
           inputContainerStyle={{ backgroundColor: COLORS.disabled4 }}
@@ -215,7 +259,7 @@ const Billboards = ({ route }) => {
         </View>
       )}
 
-      {!loadingElementsFences && typeOfElement !== "fences" && (
+      {!loadingElements && typeOfElement !== "fences" && (
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
@@ -229,7 +273,11 @@ const Billboards = ({ route }) => {
             style={styles.scrollView}
           >
             {errorLoadingElements && (
-              <Text style={styles.error} typeFont="Regular">
+              <Text
+                style={styles.textError}
+                typeFont="Regular"
+                numberOfLines={2}
+              >
                 {errorLoadingElements}
               </Text>
             )}
@@ -244,12 +292,7 @@ const Billboards = ({ route }) => {
           </ScrollView>
         </View>
       )}
-      {!loadingElements && typeOfElement === "fences" && (
-        // <View style={styles.sumarizeResults}>
-        //   <Text style={styles.textSumarizeResults} typeFont="Regular">
-        //     {`Pantalla de vallas se encuentra en construcción...`}
-        //   </Text>
-        // </View>
+      {!loadingElementsFences && typeOfElement === "fences" && (
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
@@ -262,16 +305,20 @@ const Billboards = ({ route }) => {
             contentContainerStyle={styles.grow}
             style={styles.scrollView}
           >
-            {errorLoadingElements && (
-              <Text style={styles.error} typeFont="Regular">
-                {errorLoadingElements}
+            {errorLoadingElementsFences && (
+              <Text
+                style={styles.textError}
+                typeFont="Regular"
+                numberOfLines={2}
+              >
+                {errorLoadingElementsFences}
               </Text>
             )}
             {!errorLoadingElements &&
               filteredElementsFences?.map((item, index) => (
                 <CPSFences
                   item={item}
-                  key={item?.fieldData["Id Contrato"]}
+                  key={`${item?.fieldData["ID Contrato"]}`}
                   onPressGoToPromos={() => goToPromos(item)}
                 />
               ))}
@@ -424,11 +471,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
   },
+  textError: {
+    textAlign: "center",
+    margin: 16,
+    fontWeight: "600",
+    fontSize: 14,
+    color: COLORS.error2,
+  },
   scrollView: {
     width: "97%",
     alignSelf: "center",
     borderRadius: 16,
     marginTop: 8,
   },
-  grow: { flexGrow: 1, paddingBottom: 28, backgroundColor: COLORS.white },
+  grow: { flexGrow: 1, paddingBottom: 110, backgroundColor: COLORS.white },
 });
