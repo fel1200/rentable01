@@ -17,6 +17,7 @@ import WorksScreen from "../screens/WorksScreen";
 import ImageFullScreen from "../screens/ImageFullScreen";
 import NoPasswordScreen from "../screens/NoPasswordScreen";
 import MainScreen from "../screens/MainScreen";
+import { set } from "react-hook-form";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,15 +29,56 @@ export default function Navigation() {
   const [isSignedIn, setIsSignedIn] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { userActive, setUserActive, typeOfUser, setTypeOfUser } = useApp();
+
   useEffect(() => {
     AsyncStorage.getItem("isSignedIn").then((value) => {
+      console.log("value isSignedIn", value);
       setIsSignedIn(value === "true");
-      setLoading(false);
+      if (value !== null && value === "true") {
+        //Then check if there is a sesion in storage
+        AsyncStorage.getItem("sessionData").then((valueSession) => {
+          console.log("valueSession", valueSession);
+          if (valueSession !== null) {
+            const valueSessionJson = JSON.parse(valueSession);
+            //Check if the date is more than 2 days, then close the session
+            const dateSession = new Date(valueSessionJson.dateSession);
+            const dateNow = new Date();
+            const diffTime = Math.abs(dateNow - dateSession);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            console.log("diffTime", diffTime);
+            console.log("diffDays", diffDays);
+            if (diffDays > 2) {
+              // if (diffTime > 1000) {   //Just for testing signout automatically
+              AsyncStorage.removeItem("sessionData");
+              setUserActive(null);
+              setTypeOfUser("");
+              setIsSignedIn(false);
+              setLoading(false);
+              return;
+            }
+            console.log("valueSessionJson", valueSessionJson);
+            setUserActive(JSON.parse(valueSession).user);
+            setTypeOfUser(JSON.parse(valueSession).typeOfUser);
+            setLoading(false);
+          } else {
+            setUserActive(null);
+            setTypeOfUser("");
+            setIsSignedIn(false);
+            setLoading(false);
+          }
+        });
+      } else {
+        setUserActive(null);
+        setTypeOfUser("");
+        setIsSignedIn(false);
+        setLoading(false);
+      }
     });
   }, []);
 
-  console.log("isSignedIn", isSignedIn);
-  console.log("loading", loading);
+  // console.log("isSignedIn", isSignedIn);
+  // console.log("loading", loading);
 
   if (loading) {
     return <SplashScreen />;

@@ -62,7 +62,13 @@ const BillboardsPromo = ({ route }) => {
 
   console.log("CPS activo", CPSActive);
 
-  const cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
+  let cpsActiveId = "";
+  if (typeOfElement === "billboards") {
+    cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
+  } else {
+    cpsActiveId = CPSActive?.fieldData["Id Contrato"];
+  }
+  // const cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
   console.log("CPS active id", cpsActiveId);
   // CPS_RK_Cliente: "75FB97E9-90E4-4930-95AD-953EBCF20E53",
 
@@ -224,7 +230,7 @@ const BillboardsPromo = ({ route }) => {
       <View style={styles.searchBarSection}>
         <SearchBar
           autoCorrect={false}
-          placeholder="Buscar medios..."
+          placeholder="Buscar anuncios..."
           onChangeText={
             typeOfElement === "billboards" ? updateSearch : updateSearchFences
           }
@@ -239,14 +245,14 @@ const BillboardsPromo = ({ route }) => {
       {loadingPromos && typeOfElement !== "fences" && (
         <View style={styles.sumarizeResults}>
           <Text style={styles.textSumarizeResults} typeFont="Regular">
-            {`Cargando medios de espectaculares...`}
+            {`Cargando anuncios de espectaculares...`}
           </Text>
         </View>
       )}
       {loadingPromosFences && typeOfElement === "fences" && (
         <View style={styles.sumarizeResults}>
           <Text style={styles.textSumarizeResults} typeFont="Regular">
-            {`Cargando medios de vallas ...`}
+            {`Cargando anuncios de vallas ...`}
           </Text>
         </View>
       )}
@@ -254,7 +260,7 @@ const BillboardsPromo = ({ route }) => {
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
-              {`${filteredPromos.length} medios encontrados`}
+              {`${filteredPromos.length} anuncios encontrados`}
             </Text>
           </View>
           <View style={styles.line} />
@@ -272,7 +278,7 @@ const BillboardsPromo = ({ route }) => {
               filteredPromos?.map((item, index) => (
                 <Promo
                   item={item}
-                  key={item?.fieldData?.CPSD_ID_Anuncio}
+                  key={`Billboards-${item?.fieldData?.CPSD_ID_Anuncio}-${item?.fieldData?.CPSD_PK}`}
                   onPressGoToWorks={() => goToWorks(item)}
                 />
               ))}
@@ -283,7 +289,7 @@ const BillboardsPromo = ({ route }) => {
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
-              {`${filteredPromosFences.length} medios encontrados`}
+              {`${filteredPromosFences.length} anuncios encontrados`}
             </Text>
           </View>
           <View style={styles.line} />
@@ -301,7 +307,7 @@ const BillboardsPromo = ({ route }) => {
               filteredPromosFences?.map((item, index) => (
                 <PromoFences
                   item={item}
-                  key={item?.fieldData?.CPSD_ID_Anuncio}
+                  key={`Fences-${item?.fieldData?.CPSD_ID_Anuncio}`}
                   onPressGoToWorks={() => goToWorks(item)}
                 />
               ))}
@@ -313,6 +319,7 @@ const BillboardsPromo = ({ route }) => {
 };
 
 export default function PromoScreen({ navigation, route }) {
+  const { modeActive, setModeActive } = useApp();
   const typeCPS = route.params?.type;
 
   const [index, setIndex] = useState(0);
@@ -320,6 +327,20 @@ export default function PromoScreen({ navigation, route }) {
     { key: "billboards", title: "Espectaculares", navigation: navigation },
     { key: "fences", title: "Vallas", navigation: navigation },
   ]);
+
+  //Depending the modeActive, we select tab to show
+  // If modeActive === "billboards" then we show billboards
+  // If modeActive === "fences" then we show fences
+  useEffect(() => {
+    if (modeActive === "billboards") {
+      setIndex(0);
+    } else {
+      setIndex(1);
+    }
+  }, [modeActive]);
+
+  console.log("index", index);
+  console.log("modeActive", modeActive);
 
   const _handleIndexChange = (index) => setIndex(index);
   const _renderTabBar = (props) => {
@@ -335,14 +356,14 @@ export default function PromoScreen({ navigation, route }) {
             ),
           });
 
-          return (
-            <TouchableOpacity
-              style={styles.tabItem}
-              onPress={() => setIndex(i)}
-            >
-              <Animated.Text style={{ opacity }}>{route.title}</Animated.Text>
-            </TouchableOpacity>
-          );
+          // return (
+          //   <TouchableOpacity
+          //     style={styles.tabItem}
+          //     onPress={() => setIndex(i)}
+          //   >
+          //     <Animated.Text style={{ opacity }}>{route.title}</Animated.Text>
+          //   </TouchableOpacity>
+          // );
         })}
       </View>
     );
@@ -362,7 +383,10 @@ export default function PromoScreen({ navigation, route }) {
           >
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>
-          <Text style={styles.textTitle}>{`Medios`} </Text>
+          <Text style={styles.textTitle}>{`Anuncios`} </Text>
+          <Text style={styles.textSubtitle}>
+            {`${modeActive === "billboards" ? "Espectaculares" : "Vallas"}`}{" "}
+          </Text>
         </View>
 
         <TabView
@@ -408,6 +432,16 @@ const styles = StyleSheet.create({
     fontWeight: "regular",
     fontSize: 20,
   },
+
+  textSubtitle: {
+    width: 300,
+    alignSelf: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    fontWeight: "regular",
+    fontSize: 16,
+  },
+
   scene: {
     flex: 1,
   },

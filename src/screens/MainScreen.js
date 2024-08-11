@@ -29,19 +29,20 @@ export default function SplashScreen({ navigation }) {
 
   const [textButtonModule, setTextButtonModule] = useState("");
   //Get data from async storage convert from json and then pass to the context
-  useEffect(() => {
-    const getUserFromStorage = async () => {
-      //const user = await AsyncStorage.getItem("userActive");
-      console.log("user in main screen", userActive);
-      // if (user) {
-      //   const userJson = JSON.parse(user);
-      //   console.log("userJson", userJson);
-      //   setUserActive(userJson);
-      // }
-    };
-    getUserFromStorage();
-  }, [userActive]);
+  // useEffect(() => {
+  //   const getUserFromStorage = async () => {
+  //     //const user = await AsyncStorage.getItem("userActive");
+  //     console.log("user in main screen", userActive);
+  //     // if (user) {
+  //     //   const userJson = JSON.parse(user);
+  //     //   console.log("userJson", userJson);
+  //     //   setUserActive(userJson);
+  //     // }
+  //   };
+  //   getUserFromStorage();
+  // }, [userActive]);
 
+  // console.log("userActive", userActive);
   console.log("userActive", userActive);
 
   //Method to go to the next screen
@@ -103,7 +104,8 @@ export default function SplashScreen({ navigation }) {
 
   const logout = () => {
     if (userActive !== null && userActive !== undefined) {
-      navigation.goBack();
+      // navigation.goBack();
+      navigation.navigate("Login");
     } else {
       navigation.navigate("Login");
     }

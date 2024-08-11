@@ -100,8 +100,8 @@ const LoginForm = (props) => {
       const response = await login({ loginObject });
       console.log("responseLoginForm", response);
 
-      setUser(response?.data);
-      setUserActive(response?.data);
+      // setUser(response?.data);
+      // setUserActive(response?.data);
       //with fake api
       //const response = await login({ username, password });
     } catch (e) {

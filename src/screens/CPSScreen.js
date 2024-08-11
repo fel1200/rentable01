@@ -35,7 +35,14 @@ import { SearchBar } from "@rneui/themed";
 import Icon from "react-native-vector-icons/AntDesign";
 
 const Billboards = ({ route }) => {
-  const { platform, clientActive, setCPSActive, userActive } = useApp();
+  const {
+    platform,
+    clientActive,
+    setCPSActive,
+    userActive,
+    modeActive,
+    setModeActive,
+  } = useApp();
 
   //method to render both Espectaculares and Vallas
   //depending on the type of CPS selected it renders the corresponding CPS
@@ -216,6 +223,8 @@ const Billboards = ({ route }) => {
 
   //Method to go an specific CPS
   const goToPromos = (item) => {
+    setModeActive(typeOfElement);
+
     setCPSActive(item);
     //navigation to promos
     navigation.navigate("Promo");

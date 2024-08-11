@@ -311,6 +311,8 @@ const BillboardsWorks = ({ route }) => {
 };
 
 export default function WorksScreen({ navigation, route }) {
+  const { modeActive, setModeActive } = useApp();
+
   const typeCPS = route.params?.type;
 
   const [index, setIndex] = useState(0);
@@ -318,6 +320,14 @@ export default function WorksScreen({ navigation, route }) {
     { key: "billboards", title: "Espectaculares", navigation: navigation },
     { key: "fences", title: "Vallas", navigation: navigation },
   ]);
+
+  useEffect(() => {
+    if (modeActive === "billboards") {
+      setIndex(0);
+    } else {
+      setIndex(1);
+    }
+  }, [modeActive]);
 
   const _handleIndexChange = (index) => setIndex(index);
   const _renderTabBar = (props) => {
@@ -332,14 +342,14 @@ export default function WorksScreen({ navigation, route }) {
             ),
           });
 
-          return (
-            <TouchableOpacity
-              style={styles.tabItem}
-              onPress={() => setIndex(i)}
-            >
-              <Animated.Text style={{ opacity }}>{route.title}</Animated.Text>
-            </TouchableOpacity>
-          );
+          // return (
+          //   <TouchableOpacity
+          //     style={styles.tabItem}
+          //     onPress={() => setIndex(i)}
+          //   >
+          //     <Animated.Text style={{ opacity }}>{route.title}</Animated.Text>
+          //   </TouchableOpacity>
+          // );
         })}
       </View>
     );
@@ -360,6 +370,9 @@ export default function WorksScreen({ navigation, route }) {
             <Icon name="arrowleft" size={30} color={COLORS.primary1} />
           </Pressable>
           <Text style={styles.textTitle}>{`Trabajos`} </Text>
+          <Text style={styles.textSubtitle}>
+            {`${modeActive === "billboards" ? "Espectaculares" : "Vallas"}`}{" "}
+          </Text>
         </View>
 
         <TabView
@@ -405,6 +418,16 @@ const styles = StyleSheet.create({
     fontWeight: "regular",
     fontSize: 20,
   },
+
+  textSubtitle: {
+    width: 300,
+    alignSelf: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    fontWeight: "regular",
+    fontSize: 16,
+  },
+
   scene: {
     flex: 1,
   },

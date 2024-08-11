@@ -90,7 +90,7 @@ export default function SplashScreen({ navigation }) {
           </Text>
 
           <MaskedView
-            style={{ flexDirection: "row", height: 80 }}
+            style={{ flexDirection: "row", height: 100 }}
             maskElement={
               <View
                 style={{
@@ -153,14 +153,14 @@ const styles = StyleSheet.create({
   imageBuilding: {
     width: 200,
     height: 100,
-    marginTop: 50,
+    marginTop: 30,
   },
 
   textMain: {
     fontSize: 32,
     fontWeight: "bold",
     color: COLORS.primary1,
-    marginTop: 16,
+    marginTop: 12,
   },
   textSubMainGradient: {
     fontSize: 32,

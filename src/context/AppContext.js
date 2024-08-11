@@ -23,6 +23,10 @@ export function AppProvider(props) {
 
   const [userActive, setUserActive] = useState(undefined);
 
+  const [typeOfUser, setTypeOfUser] = useState(undefined);
+
+  const [modeActive, setModeActive] = useState("light");
+
   console.log("isSignedIn", isSignedIn);
   //get and set isSignedIn from storage
   useEffect(() => {
@@ -45,6 +49,10 @@ export function AppProvider(props) {
     setIsSignedIn,
     userActive,
     setUserActive,
+    typeOfUser,
+    setTypeOfUser,
+    modeActive,
+    setModeActive,
   };
   return (
     <AppContext.Provider value={valueContext}>{children}</AppContext.Provider>

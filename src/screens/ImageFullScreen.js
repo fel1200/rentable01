@@ -28,6 +28,8 @@ import Work from "../components/Work";
 import { SearchBar } from "@rneui/themed";
 //To import icons
 import Icon from "react-native-vector-icons/AntDesign";
+//To import pinchable image
+import PinchableImage from "../components/PinchableImage";
 
 let deviceHeight = Dimensions.get("window").height;
 let deviceWidth = Dimensions.get("window").width;
@@ -140,13 +142,14 @@ const ImageFullScreen = ({ navigation }) => {
           </View>
         )}
         <View style={styles.imageContainer}>
-          <Image
+          <PinchableImage imageURL={imageURLActive} />
+          {/* <Image
             source={{
               uri: imageURLActive,
             }}
             style={styles.imageWork}
             resizeMode="contain"
-          />
+          /> */}
         </View>
       </View>
     </KeyboardAvoidingView>
