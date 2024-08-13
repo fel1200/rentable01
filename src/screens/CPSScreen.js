@@ -236,6 +236,32 @@ const Billboards = ({ route }) => {
     console.log(`Loading elements ${typeOfElement}`, loadingElementsFences);
   }
 
+  //Check if there is two objects with same key
+  if (typeOfElement === "billboards") {
+    const checkRepeated = elements?.filter(
+      (item, index, self) =>
+        index ===
+        self.findIndex(
+          (t) => t.fieldData?.CPS_ID_CPS === item.fieldData?.CPS_ID_CPS
+        )
+    );
+    if (checkRepeated.length !== elements.length) {
+      console.log("Repeated elements", checkRepeated);
+    }
+  } else {
+    const checkRepeated = elementsFences?.filter(
+      (item, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.fieldData?.["ID Contrato"] === item.fieldData?.["ID Contrato"]
+        )
+    );
+    if (checkRepeated.length !== elementsFences.length) {
+      console.log("Repeated elements", checkRepeated);
+    }
+  }
+
   return (
     <View style={styles.scene}>
       <View style={styles.searchBarSection}>
@@ -363,6 +389,7 @@ export default function CPSScreen({ navigation, route }) {
 
           return (
             <TouchableOpacity
+              key={route.key || i} // Add a unique key here
               style={styles.tabItem}
               onPress={() => setIndex(i)}
             >

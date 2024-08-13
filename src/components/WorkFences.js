@@ -18,12 +18,12 @@ let deviceWidth = Dimensions.get("window").width;
 
 export default function WorkFences(props) {
   const { item, onPressOpenImageFullScreen } = props;
-  const orden_trabajo = item?.fieldData?.ID_OTrabajo;
-  const trabajo_id = item?.fieldData?.TrabajoId;
+  const orden_trabajo = item?.fieldData["ID Orden de Trabajo"];
+  const orden_servicio = item?.fieldData["ID Orden de Servicio"];
   //const cps_agencia = item?.fieldData?.CPSD_Agencia;
-  const exhibicion = item?.fieldData?.Exhibicion;
-  const fecha_ok_trabajo = item?.fieldData["Fecha OK Trabajo"];
-  const estatus = item?.fieldData?.Estatus;
+  // const exhibicion = item?.fieldData?.Exhibicion;
+  const fecha_ok_trabajo = item?.fieldData["Fecha Realizado"];
+  const estatus = item?.fieldData["Estatus Realizado"];
   const pictureURL = item?.fieldData?.URL_Foto;
   //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //const pictureURL = undefined;
@@ -56,13 +56,15 @@ export default function WorkFences(props) {
           <Text
             style={styles.textNumberCPS}
           >{`Orden de trabajo: ${orden_trabajo}`}</Text>
-          <Text style={styles.textGenericCPS}>{`Trabajo: ${trabajo_id}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Exhibición: ${exhibicion}`}</Text>
+          >{`Orden de servicio: ${orden_servicio}`}</Text>
+          {/* <Text
+            style={styles.textGenericCPS}
+          >{`Exhibición: ${exhibicion}`}</Text> */}
           <Text
             style={styles.textGenericCPS}
-          >{`Fecha de trabajo: ${fecha_ok_trabajo}`}</Text>
+          >{`Fecha realizado: ${fecha_ok_trabajo}`}</Text>
           <Text style={styles.textGenericCPS}>{`Estatus:${estatus}`}</Text>
         </View>
       </Pressable>

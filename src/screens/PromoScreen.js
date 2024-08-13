@@ -66,7 +66,7 @@ const BillboardsPromo = ({ route }) => {
   if (typeOfElement === "billboards") {
     cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
   } else {
-    cpsActiveId = CPSActive?.fieldData["Id Contrato"];
+    cpsActiveId = CPSActive?.fieldData["ID Contrato"];
   }
   // const cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
   console.log("CPS active id", cpsActiveId);
@@ -108,6 +108,7 @@ const BillboardsPromo = ({ route }) => {
             query: [
               {
                 "ID Contrato": cpsActiveId,
+                // "ID Contrato": 3151,  //For testing
               },
             ],
             sort: [
@@ -121,7 +122,6 @@ const BillboardsPromo = ({ route }) => {
           response = await getPromoInfo(elementObject, typeOfElement);
         }
 
-        console.log("promoResponse", response?.data);
         if (typeOfElement === "billboards") {
           setLoadingPromos(false);
         } else {
@@ -129,9 +129,11 @@ const BillboardsPromo = ({ route }) => {
         }
         if (response !== null && response !== undefined) {
           if (typeOfElement === "billboards") {
+            // console.log("promoResponse billboards", response?.data);
             setPromos(response?.data);
             setFilteredPromos(response?.data);
           } else {
+            // console.log("promoResponse vallas", response?.data);
             setPromosFences(response?.data);
             setFilteredPromosFences(response?.data);
           }
@@ -196,22 +198,22 @@ const BillboardsPromo = ({ route }) => {
     //console.log("CPS before", cps);
     const searchedPromosFences = promosFences.filter(
       (promoItemFence) =>
-        promoItemFence.fieldData?.CPSD_ID_Anuncio?.toString().includes(
-          searchFences
-        ) ||
-        promoItemFence.fieldData?.CPSD_Campana?.toLowerCase().includes(
+        promoItemFence.fieldData?.["ID Anuncio Rentable"]
+          .toString()
+          .includes(searchFences) ||
+        promoItemFence.fieldData?.CPSD_Campania?.toLowerCase().includes(
           searchFences.toLowerCase()
         ) ||
-        promoItemFence.fieldData?.CPSD_Ubicacion?.toLowerCase().includes(
-          searchFences.toLowerCase()
-        ) ||
+        promoItemFence.fieldData?.["Ubicación"]
+          .toLowerCase()
+          .includes(searchFences.toLowerCase()) ||
         //Next one accesing with square bracket, because has (1) in atrribute's name
         promoItemFence.fieldData?.CPSD_Referencia?.toLowerCase().includes(
           searchFences.toLowerCase()
-        ) ||
-        //Next one accesing with square bracket, because has (1) in atrribute's name
-        promoItemFence.fieldData?.CPSD_Delegacion?.toLowerCase().includes(
-          searchFences.toLowerCase()
+          // ) ||
+          // //Next one accesing with square bracket, because has (1) in atrribute's name
+          // promoItemFence.fieldData?.CPSD_Delegacion?.toLowerCase().includes(
+          //   searchFences.toLowerCase()
         )
     );
     //console.log("searchedCPS", searchedCPS);
@@ -260,7 +262,7 @@ const BillboardsPromo = ({ route }) => {
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
-              {`${filteredPromos.length} anuncios encontrados`}
+              {`${filteredPromos.length} anuncios de espectaculares encontrados`}
             </Text>
           </View>
           <View style={styles.line} />
@@ -289,7 +291,7 @@ const BillboardsPromo = ({ route }) => {
         <View>
           <View style={styles.sumarizeResults}>
             <Text style={styles.textSumarizeResults} typeFont="Regular">
-              {`${filteredPromosFences.length} anuncios encontrados`}
+              {`${filteredPromosFences.length} anuncios de vallas encontrados`}
             </Text>
           </View>
           <View style={styles.line} />
@@ -307,7 +309,7 @@ const BillboardsPromo = ({ route }) => {
               filteredPromosFences?.map((item, index) => (
                 <PromoFences
                   item={item}
-                  key={`Fences-${item?.fieldData?.CPSD_ID_Anuncio}`}
+                  key={`Fences-${item?.fieldData?.["ID Anuncio Rentable"]}`}
                   onPressGoToWorks={() => goToWorks(item)}
                 />
               ))}

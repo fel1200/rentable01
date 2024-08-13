@@ -7,12 +7,12 @@ import { COLORS } from "../utils/constants.js";
 
 export default function PromoFences(props) {
   const { item, onPressGoToWorks } = props;
-  const cpsd_id_anuncio = item?.fieldData?.CPSD_ID_Anuncio;
-  const cpsd_campana = item?.fieldData?.CPSD_Campana;
+  const cpsd_id_anuncio = item?.fieldData["ID Anuncio Rentable"];
+  const cpsd_campana = item?.fieldData?.Campania;
   //const cps_agencia = item?.fieldData?.CPSD_Agencia;
-  const cpsd_ubicacion = item?.fieldData?.CPSD_Ubicacion;
-  const cpsd_referencia = item?.fieldData?.CPSD_Referencia;
-  const cpsd_delegacion = item?.fieldData?.CPSD_Delegacion;
+  const cpsd_ubicacion = item?.fieldData["Ubicación"];
+  const cpsd_referencia = item?.fieldData?.Referencia;
+  // const cpsd_delegacion = item?.fieldData?.CPSD_Delegacion;
   //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //console.log("item", item);
   return (
@@ -37,10 +37,10 @@ export default function PromoFences(props) {
           >{`Ubicación: ${cpsd_ubicacion}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Campaña: ${cpsd_referencia}`}</Text>
-          <Text
+          >{`Referencia: ${cpsd_referencia}`}</Text>
+          {/* <Text
             style={styles.textGenericCPS}
-          >{`Delegación:${cpsd_delegacion}`}</Text>
+          >{`Delegación:${cpsd_delegacion}`}</Text> */}
         </View>
       </Pressable>
     </View>

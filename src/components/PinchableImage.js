@@ -8,13 +8,15 @@ import Animated, {
 
 export default function PinchableImage({ imageURL }) {
   const scale = useSharedValue(1);
+  const lastScale = useSharedValue(1);
 
   const pinchGesture = Gesture.Pinch()
     .onUpdate((event) => {
-      scale.value = event.scale;
+      scale.value = lastScale.value * event.scale;
     })
     .onEnd(() => {
-      scale.value = withTiming(1, { duration: 200 });
+      //scale.value = withTiming(1, { duration: 200 });
+      lastScale.value = scale.value; // Preserve the zoomed state
     });
 
   const animatedStyle = useAnimatedStyle(() => {

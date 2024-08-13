@@ -142,7 +142,7 @@ export async function getPromoInfo(promoObject, typeOfElement) {
       URL = `${API_HOST}Rentable_08_Servicios/layouts/API_CPSDetalle/_find`;
       token = await getNewToken("Rentable_08_Servicios");
     } else {
-      URL = `${API_HOST}EasySoft%20Data/layouts/API_Trabajos/_find`;
+      URL = `${API_HOST}EasySoft%20Data/layouts/API_Medios/_find`;
       token = await getNewToken("EasySoft%20Data");
     }
     if (token !== null) {

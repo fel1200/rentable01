@@ -64,12 +64,19 @@ const BillboardsWorks = ({ route }) => {
 
   console.log("CPS activo", CPSActive);
 
-  const cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
+  let cpsActiveId = "";
+  let promoActiveIdAnuncio = "";
+  if (typeOfElement === "billboards") {
+    cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
+    promoActiveIdAnuncio = promoActive?.fieldData?.CPSD_ID_Anuncio;
+  } else {
+    cpsActiveId = CPSActive?.fieldData["ID Contrato"];
+    promoActiveIdAnuncio = promoActive?.fieldData["ID Anuncio Rentable"];
+  }
   console.log("CPS active id", cpsActiveId);
 
   console.log("Anuncio activo", promoActive);
 
-  const promoActiveIdAnuncio = promoActive?.fieldData?.CPSD_ID_Anuncio;
   console.log("promo active id", promoActiveIdAnuncio);
 
   const promoActivePedido = promoActive?.fieldData?.CPSD_ID_CPS;
@@ -112,13 +119,15 @@ const BillboardsWorks = ({ route }) => {
           elementObject = {
             query: [
               {
-                "ID CPS": cpsActiveId,
-                "Id Inventario": promoActiveIdAnuncio,
+                // "ID CPS": cpsActiveId,
+                // "ID Inventario": promoActiveIdAnuncio,
+                "ID CPS": 3151,
+                "ID Inventario": "01078-V03",
               },
             ],
             sort: [
               {
-                fieldName: "Id Inventario",
+                fieldName: "ID Inventario",
                 sortOrder: "ascend",
               },
             ],
@@ -127,7 +136,8 @@ const BillboardsWorks = ({ route }) => {
           workResponse = await getWorkInfo(elementObject, typeOfElement);
         }
 
-        console.log("workResponse", workResponse?.data);
+        // console.log("workResponse", workResponse?.data);
+        console.log("Type of element", typeOfElement);
         if (typeOfElement === "billboards") {
           setLoadingWorks(false);
         } else {
@@ -135,9 +145,11 @@ const BillboardsWorks = ({ route }) => {
         }
         if (workResponse !== null && workResponse !== undefined) {
           if (typeOfElement === "billboards") {
+            console.log("Work response espectaculares", workResponse?.data);
             setWorks(workResponse?.data);
             setFilteredWorks(workResponse?.data);
           } else {
+            console.log("Work response vallas", workResponse?.data);
             setWorksFences(workResponse?.data);
             setFilteredWorksFences(workResponse?.data);
           }
@@ -195,14 +207,16 @@ const BillboardsWorks = ({ route }) => {
     //console.log("CPS before", cps);
     const searchedWorksFences = worksFences.filter(
       (workItemFence) =>
-        workItemFence.fieldData?.ID_OTrabajo?.toString().includes(
-          searchFences
-        ) ||
-        workItemFence.fieldData?.TrabajoId?.toString().includes(searchFences) ||
-        workItemFence.fieldData?.Exhibicion?.toLowerCase().includes(
-          searchFences.toLowerCase()
-        ) ||
-        workItemFence.fieldData?.fieldData["Fecha OK Trabajo"]
+        workItemFence.fieldData["ID Orden de Trabajo"]
+          .toString()
+          .includes(searchFences) ||
+        workItemFence.fieldData["ID Orden de Servicio"]
+          .toString()
+          .includes(searchFences) ||
+        workItemFence.fieldData["Estatus Realizado"]
+          .toLowerCase()
+          .includes(searchFences.toLowerCase()) ||
+        workItemFence.fieldData?.fieldData["Fecha Realizado"]
           .toLowerCase()
           .includes(searchFences.toLowerCase())
     );
