@@ -1,6 +1,7 @@
 //React imports
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import React from "react";
+import { formatDate } from "../utils/format.js";
 
 //Colors
 import { COLORS } from "../utils/constants.js";
@@ -13,7 +14,39 @@ export default function CPS(props) {
   const cps_estatus = item?.fieldData?.CPS_Estatus;
   const cps_ejecutivo = item?.fieldData?.CPS_Ejecutivo;
   const cps_campania = item?.fieldData["CPS_Campania(1)"];
-  const cps_fecha_inicio = item?.fieldData?.CPS_FechaGenerado;
+
+  console.log(`CPS espectacular: ${item.fieldData}`);
+  //fecha generado comes in the format of month/day/year, we need to day/month/year
+  let formattedDateGenerated;
+  if (item.fieldData.CPS_FechaGenerado) {
+    formattedDateGenerated = formatDate(item.fieldData.CPS_FechaGenerado);
+  } else {
+    formattedDateGenerated = "No se puede obtener la fecha";
+  }
+
+  const cps_fecha_generado = formattedDateGenerated;
+
+  let formattedDateBegin;
+  if (item?.fieldData["CPS_d_CPSDetalle::CPSD_FechaInicial"]) {
+    formattedDateBegin = formatDate(
+      item?.fieldData["CPS_d_CPSDetalle::CPSD_FechaInicial"]
+    );
+  } else {
+    formattedDateBegin = "No se puede obtener la fecha";
+  }
+  const cps_fecha_inicio = formattedDateBegin;
+
+  let formattedDateEnd;
+  if (item?.fieldData["CPS_d_CPSDetalle::CPSD_FechaFinal"]) {
+    formattedDateEnd = formatDate(
+      item?.fieldData["CPS_d_CPSDetalle::CPSD_FechaFinal"]
+    );
+  } else {
+    formattedDateEnd = "No se puede obtener la fecha";
+  }
+
+  const cps_fecha_fin = formattedDateEnd;
+
   // const cps_fecha_fin = item?.fieldData?.CPS_Fecha_Fin;
   //console.log("item", item);
   return (
@@ -39,7 +72,13 @@ export default function CPS(props) {
           >{`Ejecutivo:${cps_ejecutivo}`}</Text>
           <Text
             style={styles.textGenericCPS}
-          >{`Generado:${cps_fecha_inicio}`}</Text>
+          >{`Generado:${cps_fecha_generado}`}</Text>
+          <Text
+            style={styles.textGenericCPS}
+          >{`Inicio:${cps_fecha_inicio}`}</Text>
+          <Text
+            style={styles.textGenericCPS}
+          >{`Término:${cps_fecha_fin}`}</Text>
           {/* <Text
             style={styles.textGenericCPS}
           >{`Fecha fin:${cps_fecha_fin}`}</Text> */}
@@ -69,7 +108,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "100%",
-    height: 160,
+    height: 200,
     flex: 1,
     flexDirection: "row",
   },

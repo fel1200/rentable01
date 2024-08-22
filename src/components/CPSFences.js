@@ -1,6 +1,7 @@
 //React imports
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import React from "react";
+import { formatDate } from "../utils/format.js";
 
 //Colors
 import { COLORS } from "../utils/constants.js";
@@ -13,8 +14,25 @@ export default function CPSFences(props) {
   const cps_estatus = item?.fieldData?.Estatus;
   //   const cps_ejecutivo = item?.fieldData?.CPS_Ejecutivo;
   const cps_campania = item?.fieldData?.Campania;
-  const cps_fecha_inicio = item?.fieldData["Fecha Inicio"];
-  const cps_fecha_fin = item?.fieldData["Fecha Termino"];
+
+  let formattedDateBegin;
+  if (item.fieldData["Fecha Inicio"]) {
+    formattedDateBegin = formatDate(item.fieldData["Fecha Inicio"]);
+  } else {
+    formattedDateBegin = "No se puede obtener la fecha";
+  }
+  const cps_fecha_inicio = formattedDateBegin;
+
+  let formattedDateEnd;
+  if (item.fieldData["Fecha Termino"]) {
+    formattedDateEnd = formatDate(item.fieldData["Fecha Termino"]);
+  } else {
+    formattedDateEnd = "No se puede obtener la fecha";
+  }
+  const cps_fecha_fin = formattedDateEnd;
+
+  console.log(`CPS valla: ${item.fieldData}`);
+
   //console.log("item", item);
   return (
     <View style={styles.bg}>
@@ -69,7 +87,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "100%",
-    height: 140,
+    height: 180,
     flex: 1,
     flexDirection: "row",
   },

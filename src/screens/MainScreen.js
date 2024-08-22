@@ -155,7 +155,7 @@ export default function SplashScreen({ navigation }) {
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={{ fontSize: 24, fontWeight: 600 }}>
+                  <Text style={{ fontSize: 20, fontWeight: 600 }}>
                     {userActive
                       ? userActive[0]?.fieldData?.Soc_Denominacion
                       : "Usuario"}

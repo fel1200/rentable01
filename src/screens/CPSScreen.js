@@ -102,7 +102,7 @@ const Billboards = ({ route }) => {
                 sortOrder: "ascend",
               },
             ],
-            limit: "200",
+            limit: "2000",
           };
           response = await getCPSInfo(elementObject, typeOfElement);
         } else {
@@ -119,7 +119,7 @@ const Billboards = ({ route }) => {
                 sortOrder: "ascend",
               },
             ],
-            limit: "200",
+            limit: "2000",
           };
           //While it is not implemented, it will be a empty array
           response = await getCPSInfo(elementObject, typeOfElement);
@@ -133,12 +133,18 @@ const Billboards = ({ route }) => {
         }
         if (response !== null && response !== undefined) {
           if (typeOfElement === "billboards") {
-            setElements(response?.data);
-            setFilteredElements(response?.data);
+            originalResponse = response?.data;
+            //Inverted
+            sortedInverted = originalResponse.reverse();
+            setElements(sortedInverted);
+            setFilteredElements(sortedInverted);
             console.log(` ${typeOfElement} elements`, response?.data);
           } else {
-            setElementsFences(response?.data);
-            setFilteredElementsFences(response?.data);
+            originalResponse = response?.data;
+            //Inverted
+            sortedInverted = originalResponse.reverse();
+            setElementsFences(sortedInverted);
+            setFilteredElementsFences(sortedInverted);
             console.log(` ${typeOfElement} elements`, response?.data);
           }
         } else {

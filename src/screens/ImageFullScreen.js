@@ -82,6 +82,8 @@ const ImageFullScreen = ({ navigation }) => {
 
     const fileUri = FileSystem.documentDirectory + nameFile;
 
+    console.log("fileUri", fileUri);
+
     //Saving file from imageURLActive
     await FileSystem.downloadAsync(imageURLActive, fileUri);
 

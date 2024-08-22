@@ -24,10 +24,13 @@ export default function WorkFences(props) {
   // const exhibicion = item?.fieldData?.Exhibicion;
   const fecha_ok_trabajo = item?.fieldData["Fecha Realizado"];
   const estatus = item?.fieldData["Estatus Realizado"];
-  const pictureURL = item?.fieldData?.URL_Foto;
+  const pictureURL = item?.fieldData?.url;
+  // const pictureURL = item?.fieldData["Fotos_Comprobatorias Trabajos::Foto 1"];
+
   //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //const pictureURL = undefined;
-  console.log("item", item);
+  console.log("trabajo de valla", item);
+  console.log(`URL de la imagen: ${pictureURL}`);
   //console.log("URL", pictureURL);
 
   return (
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "100%",
-    height: 130,
+    height: 180,
     flex: 1,
     flexDirection: "row",
   },

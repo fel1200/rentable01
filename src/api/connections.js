@@ -24,7 +24,7 @@ export async function getCPSInfo(cpsObject, typeOfElement) {
     }
 
     //First check if last token is still valid
-
+    console.log(`url ${typeOfElement}`, URL);
     //First call to get the token
     //const token = await getNewToken();
     if (token !== null) {
@@ -149,7 +149,10 @@ export async function getPromoInfo(promoObject, typeOfElement) {
       console.log("token", token);
       console.log("promoObject", promoObject);
       //Second call to get the info of clients
-      console.log("URL api host", `${URL}`);
+      console.log(
+        "URL api host promo",
+        `${URL} typeOfElement ${typeOfElement}`
+      );
       //url: 'https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find',
       const response = await fetch(`${URL}`, {
         method: "POST",
@@ -207,7 +210,7 @@ export async function getWorkInfo(workObject, typeOfElement) {
     }
     if (token !== null) {
       console.log("token", token);
-      console.log("workObject", workObject);
+      console.log("workObject", typeOfElement, workObject);
       //Second call to get the info of clients
       console.log("URL api host", `${URL}`);
       //url: 'https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find',

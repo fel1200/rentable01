@@ -27,7 +27,7 @@ export default function Work(props) {
   const pictureURL = item?.fieldData?.URL_Foto;
   //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //const pictureURL = undefined;
-  console.log("item", item);
+  // console.log("item", item);
   //console.log("URL", pictureURL);
 
   return (
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "100%",
-    height: 130,
+    height: 180,
     flex: 1,
     flexDirection: "row",
   },

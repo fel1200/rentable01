@@ -70,7 +70,9 @@ const BillboardsWorks = ({ route }) => {
     cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
     promoActiveIdAnuncio = promoActive?.fieldData?.CPSD_ID_Anuncio;
   } else {
+    console.log("Trató de sacar el id de contrato");
     cpsActiveId = CPSActive?.fieldData["ID Contrato"];
+    console.log("CPS active id vallas", cpsActiveId);
     promoActiveIdAnuncio = promoActive?.fieldData["ID Anuncio Rentable"];
   }
   console.log("CPS active id", cpsActiveId);
@@ -105,6 +107,12 @@ const BillboardsWorks = ({ route }) => {
                 TipoInstalacionDescripcion: "Instalación",
                 Estatus: "Realizado",
               },
+              // { //For testing purposes
+              //   PedidoId: 213679,
+              //   ClaveAnuncio: 1088,
+              //   TipoInstalacionDescripcion: "Instalación",
+              //   Estatus: "Realizado",
+              // },
             ],
             sort: [
               {
@@ -112,17 +120,17 @@ const BillboardsWorks = ({ route }) => {
                 sortOrder: "ascend",
               },
             ],
-            limit: "200",
+            limit: "2000",
           };
           workResponse = await getWorkInfo(elementObject, typeOfElement);
         } else {
           elementObject = {
             query: [
               {
-                // "ID CPS": cpsActiveId,
-                // "ID Inventario": promoActiveIdAnuncio,
-                "ID CPS": 3151,
-                "ID Inventario": "01078-V03",
+                "ID CPS": cpsActiveId,
+                "ID Inventario": promoActiveIdAnuncio,
+                // "ID CPS": 3151,
+                // "ID Inventario": "01078-V03",
               },
             ],
             sort: [
@@ -131,7 +139,7 @@ const BillboardsWorks = ({ route }) => {
                 sortOrder: "ascend",
               },
             ],
-            limit: "200",
+            limit: "2000",
           };
           workResponse = await getWorkInfo(elementObject, typeOfElement);
         }
@@ -227,7 +235,11 @@ const BillboardsWorks = ({ route }) => {
 
   //function to to to info of CPS of a client
   const goToImageFullScreen = (item) => {
-    setImageURLActive(item?.fieldData?.URL_Foto);
+    if (typeOfElement === "billboards") {
+      setImageURLActive(item?.fieldData?.URL_Foto);
+    } else {
+      setImageURLActive(item?.fieldData?.url);
+    }
     navigation.navigate("ImageFullScreen");
   };
 
@@ -276,7 +288,7 @@ const BillboardsWorks = ({ route }) => {
             style={styles.scrollView}
           >
             {errorLoadingWorks && (
-              <Text style={styles.error} typeFont="Regular">
+              <Text style={styles.textError} typeFont="Regular">
                 {errorLoadingWorks}
               </Text>
             )}
@@ -305,7 +317,7 @@ const BillboardsWorks = ({ route }) => {
             style={styles.scrollView}
           >
             {errorLoadingWorksFences && (
-              <Text style={styles.error} typeFont="Regular">
+              <Text style={styles.textError} typeFont="Regular">
                 {errorLoadingWorksFences}
               </Text>
             )}

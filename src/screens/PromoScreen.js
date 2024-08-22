@@ -272,7 +272,7 @@ const BillboardsPromo = ({ route }) => {
             style={styles.scrollView}
           >
             {errorLoadingPromos && (
-              <Text style={styles.error} typeFont="Regular">
+              <Text style={styles.textError} typeFont="Regular">
                 {errorLoadingPromos}
               </Text>
             )}
@@ -301,7 +301,7 @@ const BillboardsPromo = ({ route }) => {
             style={styles.scrollView}
           >
             {errorLoadingPromosFences && (
-              <Text style={styles.error} typeFont="Regular">
+              <Text style={styles.textError} typeFont="Regular">
                 {errorLoadingPromosFences}
               </Text>
             )}

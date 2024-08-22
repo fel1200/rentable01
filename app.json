@@ -1,34 +1,30 @@
 {
   "expo": {
-    "name": "appRentableVer0_5",
-    "slug": "appRentableVer0_5",
+    "name": "appRentableVer1_0p2",
+    "slug": "appRentableVer1_0p2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/iconApp.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/iconApp.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "rentable.appversion05"
+      "bundleIdentifier": "rentable.appversion01p2"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "fe8e30a4-7e35-4011-8671-9758ac9384eb"
-      }
-    },
+    "extra": {},
     "runtimeVersion": {
       "policy": "appVersion"
     },

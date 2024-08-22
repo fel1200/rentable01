@@ -8,6 +8,8 @@ import {
 } from "react-native";
 
 import React from "react";
+//For screen dimensions
+
 //For gradient
 import { LinearGradient } from "expo-linear-gradient";
 //for text gradient
@@ -23,6 +25,9 @@ export default function SplashScreen({ navigation }) {
   //Context global vars
   const { platform } = useApp();
 
+  const fontscale = Dimensions.get("window").fontScale;
+
+  console.log(`fontscale ${fontscale}`);
   //Method to go to the next screen
   const goMediumScreen = () => {
     navigation.navigate("Selection");
@@ -85,7 +90,16 @@ export default function SplashScreen({ navigation }) {
             style={styles.imageBuilding}
           />
 
-          <Text style={styles.textMain} typeFont="Medium">
+          <Text
+            style={[
+              {
+                fontSize: 32 - (fontscale - 1) * 32,
+                fontWeight: 600,
+              },
+              styles.textMain,
+            ]}
+            typeFont="Medium"
+          >
             Bienvenido
           </Text>
 
@@ -98,8 +112,20 @@ export default function SplashScreen({ navigation }) {
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 32, fontWeight: 600 }}>Rentable</Text>
-                <Text style={{ fontSize: 32, fontWeight: 600 }}>
+                <Text
+                  style={{
+                    fontSize: 32 - (fontscale - 1) * 32,
+                    fontWeight: 600,
+                  }}
+                >
+                  Rentable
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 32 - (fontscale - 1) * 32,
+                    fontWeight: 600,
+                  }}
+                >
                   Management
                 </Text>
               </View>
@@ -151,13 +177,15 @@ const styles = StyleSheet.create({
     width: "85%",
   },
   imageBuilding: {
-    width: 200,
-    height: 100,
+    // width: 200,
+    // height: 100,
+    width: "30%",
+    height: "10%",
     marginTop: 30,
   },
 
   textMain: {
-    fontSize: 32,
+    // fontSize: 32,
     fontWeight: "bold",
     color: COLORS.primary1,
     marginTop: 12,
