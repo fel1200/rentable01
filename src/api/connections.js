@@ -9,18 +9,24 @@ import {
 //To import secure-store
 import * as SecureStore from "expo-secure-store";
 
+//Import axios
+import axios from "axios";
+
 //Method to get the information from CPS given an object of CPS_RK_Cliente
 export async function getCPSInfo(cpsObject, typeOfElement) {
   try {
     let URL;
     let token;
+    let database;
     console.log(`Starting getting CPS info ${typeOfElement}`);
     if (typeOfElement === "billboards") {
       URL = `${API_HOST}Rentable_08_Servicios/layouts/API_CPS/_find`;
       token = await getNewToken("Rentable_08_Servicios");
+      database = "Rentable_08_Servicios";
     } else if (typeOfElement === "fences") {
       URL = `${API_HOST}EasySoft%20Data/layouts/API_Contratos/_find`;
       token = await getNewToken("EasySoft%20Data");
+      database = "EasySoft%20Data";
     }
 
     //First check if last token is still valid
@@ -43,6 +49,7 @@ export async function getCPSInfo(cpsObject, typeOfElement) {
         body: JSON.stringify(cpsObject),
       });
       const responseJson = await response.json();
+      const responseCloseToken = await closeToken(token, database);
       console.log("responseJson", responseJson);
       if (
         responseJson?.messages[0]?.code === "0" &&
@@ -87,19 +94,46 @@ export async function getClientsInfo(clientsObject) {
         `${API_HOST}Rentable_06_Socios/layouts/API_Socios/_find`
       );
       //url: 'https://rentable.site/fmi/data/vLatest/databases/Rentable_06_Socios/layouts/API_Socios/_find',
-      const response = await fetch(
+      //After this fetch finishes we close the token with "then" and we return the response
+      //Initial time to measure how many time it takes to get a token
+      // const initialTime = new Date().getTime();
+
+      const initialTime = performance.now();
+      // const response = await fetch(
+      //   `${API_HOST}Rentable_06_Socios/layouts/API_Socios/_find`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //     body: JSON.stringify(clientsObject),
+      //   }
+      // );
+      // const finalTime = new Date().getTime();
+
+      const responseJson = await axios.post(
         `${API_HOST}Rentable_06_Socios/layouts/API_Socios/_find`,
+        clientsObject,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(clientsObject),
         }
       );
-      const responseJson = await response.json();
-      //console.log("responseJson", responseJson);
+
+      const finalTime = performance.now();
+      console.log(
+        "Time to get clients in seconds",
+        (finalTime - initialTime) / 1000
+      );
+
+      //const responseJson = await response.json();
+
+      // const responseCloseToken = await closeToken(token, "Rentable_06_Socios");
+
+      console.log("responseJson getclientsinfo", responseJson);
       if (
         responseJson?.messages[0]?.code === "0" &&
         responseJson?.messages[0]?.message === "OK"
@@ -136,14 +170,17 @@ export async function getPromoInfo(promoObject, typeOfElement) {
     //const token = await getNewToken();
     let URL;
     let token;
+    let database;
     console.log(`Starting getting Promo info ${typeOfElement}`);
     console.log(`promoObject ${typeOfElement}`, promoObject);
     if (typeOfElement === "billboards") {
       URL = `${API_HOST}Rentable_08_Servicios/layouts/API_CPSDetalle/_find`;
       token = await getNewToken("Rentable_08_Servicios");
+      database = "Rentable_08_Servicios";
     } else {
       URL = `${API_HOST}EasySoft%20Data/layouts/API_Medios/_find`;
       token = await getNewToken("EasySoft%20Data");
+      database = "EasySoft%20Data";
     }
     if (token !== null) {
       console.log("token", token);
@@ -163,6 +200,8 @@ export async function getPromoInfo(promoObject, typeOfElement) {
         body: JSON.stringify(promoObject),
       });
       const responseJson = await response.json();
+      const responseCloseToken = await closeToken(token, database);
+
       //console.log("responseJson", responseJson);
       if (
         responseJson?.messages[0]?.code === "0" &&
@@ -200,13 +239,16 @@ export async function getWorkInfo(workObject, typeOfElement) {
     //const token = await getNewToken();
     let URL;
     let token;
+    let database;
     console.log(`Starting getting Work info ${typeOfElement}, ${workObject}`);
     if (typeOfElement === "billboards") {
       URL = `${API_HOST}DBR_Op_NC/layouts/API_Trabajos/_find`;
       token = await getNewToken("DBR_Op_NC");
+      database = "DBR_Op_NC";
     } else {
       URL = `${API_HOST}EasySoft%20Data/layouts/API_Trabajos/_find`;
       token = await getNewToken("EasySoft%20Data");
+      database = "EasySoft%20Data";
     }
     if (token !== null) {
       console.log("token", token);
@@ -223,6 +265,7 @@ export async function getWorkInfo(workObject, typeOfElement) {
         body: JSON.stringify(workObject),
       });
       const responseJson = await response.json();
+      const responseCloseToken = await closeToken(token, database);
       //console.log("responseJson", responseJson);
       if (
         responseJson?.messages[0]?.code === "0" &&
@@ -255,6 +298,8 @@ export async function getWorkInfo(workObject, typeOfElement) {
 export async function getNewToken(database) {
   try {
     console.log(`Starting getting new token ${database}`);
+    //Initial time to measure how many time it takes to get a token
+    const initialTime = new Date().getTime();
     const response = await fetch(`${API_HOST}${database}/sessions`, {
       method: "POST",
       headers: {
@@ -262,6 +307,12 @@ export async function getNewToken(database) {
         Authorization: "Basic dXNlckFQSTpBcDFGMWwz",
       },
     });
+    //Final time to measure how many time it takes to get a token
+    const finalTime = new Date().getTime();
+    console.log(
+      `Time to get token in seconds ${database}`,
+      (finalTime - initialTime) / 1000
+    );
     const responseJson = await response.json();
     console.log(` responseJson ${database}`, responseJson);
     //console.log("responseJsonCode", responseJson?.messages[0].code);
@@ -374,6 +425,48 @@ export async function checkTokenIsValid(tokenToValidate, database) {
   }
 }
 
+//Method to close the token
+export async function closeToken(tokenToClose, database) {
+  try {
+    console.log(
+      "Closing token",
+      `${API_HOST}${database}/sessions/${tokenToClose}`
+    );
+
+    const response = await fetch(
+      `${API_HOST}${database}/sessions/${tokenToClose}`,
+      {
+        method: "delete",
+        maxBodyLength: "Infinity",
+        headers: {
+          // "Content-Type": "application/json",
+          // Authorization: `Bearer ${tokenToClose}`,
+        },
+      }
+    );
+    const responseJson = await response.json();
+    console.log("responseJson Close Token", responseJson);
+    //console.log("responseJsonCode", responseJson?.messages[0].code);
+    //console.log("responseJsonMessage", responseJson?.messages[0].message);
+    console.log(
+      "responseJsonToken Close token",
+      responseJson?.messages[0].message
+    );
+
+    if (
+      responseJson?.messages[0]?.code === "0" &&
+      responseJson?.messages[0]?.message === "OK"
+    ) {
+      //Now it has been closed, we return the value
+      return responseJson?.messages[0].message;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function loginService({ loginObject }) {
   try {
     console.log("Checking loginObject", loginObject);
@@ -391,6 +484,8 @@ export async function loginService({ loginObject }) {
 
     const responseJson = await response.json();
     console.log("responseJsonLogin", responseJson);
+
+    responseCloseToken = await closeToken(token, "Rentable_06_Socios");
     if (
       responseJson?.messages[0]?.code === "0" &&
       responseJson?.messages[0]?.message === "OK"

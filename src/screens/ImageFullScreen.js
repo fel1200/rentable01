@@ -19,6 +19,8 @@ import { COLORS } from "../utils/constants";
 import useApp from "../hooks/useApp";
 //FileSystem
 import * as FileSystem from "expo-file-system";
+//Fast image
+import FastImage from "react-native-fast-image";
 
 //API
 import { getWorkInfo } from "../api/connections";
@@ -144,7 +146,29 @@ const ImageFullScreen = ({ navigation }) => {
           </View>
         )}
         <View style={styles.imageContainer}>
-          <PinchableImage imageURL={imageURLActive} />
+          {/* <PinchableImage imageURL={imageURLActive} /> */}
+          <Image
+            source={{
+              uri: imageURLActive,
+            }}
+            style={styles.imageWork}
+            resizeMode="contain"
+          />
+          {/* <FastImage
+            style={{ width: deviceWidth, height: "75%" }}
+            source={{
+              uri: imageURLActive,
+              priority: FastImage.priority.normal,
+            }}
+          /> */}
+          {/* <FastImage
+            style={styles.imageWork}
+            source={{
+              uri: imageURLActive,
+              priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          /> */}
           {/* <Image
             source={{
               uri: imageURLActive,

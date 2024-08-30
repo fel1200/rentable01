@@ -31,6 +31,9 @@ export default function WorkFences(props) {
   //const pictureURL = undefined;
   console.log("trabajo de valla", item);
   console.log(`URL de la imagen: ${pictureURL}`);
+
+  console.log("Entró a work");
+
   //console.log("URL", pictureURL);
 
   return (
