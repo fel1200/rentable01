@@ -24,9 +24,8 @@ export default function Work(props) {
   const exhibicion = item?.fieldData?.Exhibicion;
   const fecha_ok_trabajo = item?.fieldData["Fecha OK Trabajo"];
   const estatus = item?.fieldData?.Estatus;
-  const pictureURL = item?.fieldData?.URL_Foto;
-
-  console.log("Entró a work");
+  const pictureURL = item?.fieldData["Fotos_Comprobatorias Trabajos::Foto 1"];
+  console.log("Entró a work billboards");
   //const cps_campania = item?.fieldData["CPS_Campania(1)"];
   //const pictureURL = undefined;
   // console.log("item", item);

@@ -41,8 +41,14 @@ const BillboardsPromo = ({ route }) => {
   //depending on the type of CPS selected it renders the corresponding CPS
   //Method to go to the next screen
   //Context global vars
-  const { platform, clientActive, CPSActive, setPromoActive, userActive } =
-    useApp();
+  const {
+    platform,
+    clientActive,
+    CPSActive,
+    setPromoActive,
+    userActive,
+    modeActive,
+  } = useApp();
 
   const typeOfElement = route.key;
   const navigation = route.navigation;
@@ -86,7 +92,7 @@ const BillboardsPromo = ({ route }) => {
         //Creating object to consult info of a hardcoded object
         let response;
         let elementObject;
-        if (typeOfElement === "billboards") {
+        if (typeOfElement === "billboards" && modeActive === "billboards") {
           elementObject = {
             query: [
               {
@@ -103,7 +109,7 @@ const BillboardsPromo = ({ route }) => {
             limit: "2000",
           };
           response = await getPromoInfo(elementObject, typeOfElement);
-        } else {
+        } else if (typeOfElement === "fences" && modeActive === "fences") {
           elementObject = {
             query: [
               {
@@ -128,11 +134,11 @@ const BillboardsPromo = ({ route }) => {
           setLoadingPromosFences(false);
         }
         if (response !== null && response !== undefined) {
-          if (typeOfElement === "billboards") {
+          if (typeOfElement === "billboards" && modeActive === "billboards") {
             // console.log("promoResponse billboards", response?.data);
             setPromos(response?.data);
             setFilteredPromos(response?.data);
-          } else {
+          } else if (typeOfElement === "fences" && modeActive === "fences") {
             // console.log("promoResponse vallas", response?.data);
             setPromosFences(response?.data);
             setFilteredPromosFences(response?.data);
@@ -143,10 +149,10 @@ const BillboardsPromo = ({ route }) => {
         }
       } catch (error) {
         console.log(error);
-        if (typeOfElement === "billboards") {
+        if (typeOfElement === "billboards" && modeActive === "billboards") {
           setLoadingPromos(false);
           setErrorLoadingPromos(`${getErrorMessage(error.message, "Promo")}`);
-        } else {
+        } else if (typeOfElement === "fences" && modeActive === "fences") {
           setLoadingPromosFences(false);
           setErrorLoadingPromosFences(
             `${getErrorMessage(error.message, "Promo")}`

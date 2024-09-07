@@ -1,6 +1,6 @@
 {
-  "name": "apprentablever1_0",
-  "version": "1.0.0",
+  "name": "apprentablever1_2",
+  "version": "1.0.2",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",

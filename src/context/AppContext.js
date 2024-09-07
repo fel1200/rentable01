@@ -27,6 +27,8 @@ export function AppProvider(props) {
 
   const [modeActive, setModeActive] = useState("light");
 
+  const [tokensOpened, setTokensOpened] = useState([]);
+
   console.log("isSignedIn", isSignedIn);
   //get and set isSignedIn from storage
   useEffect(() => {

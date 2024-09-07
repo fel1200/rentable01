@@ -43,7 +43,9 @@ const BillboardsWorks = ({ route }) => {
     CPSActive,
     promoActive,
     setImageURLActive,
+    imageURLActive,
     userActive,
+    modeActive,
   } = useApp();
 
   const typeOfElement = route.key;
@@ -62,35 +64,41 @@ const BillboardsWorks = ({ route }) => {
   const [errorLoadingWorksFences, setErrorLoadingWorksFences] = useState("");
   const [filteredWorksFences, setFilteredWorksFences] = useState([]);
 
-  console.log("CPS activo", CPSActive);
+  console.log("CPS activo", typeOfElement, " ", CPSActive);
 
   let cpsActiveId = "";
   let promoActiveIdAnuncio = "";
-  if (typeOfElement === "billboards") {
+  if (typeOfElement === "billboards" && modeActive === "billboards") {
     cpsActiveId = CPSActive?.fieldData?.CPS_ID_CPS;
     promoActiveIdAnuncio = promoActive?.fieldData?.CPSD_ID_Anuncio;
-  } else {
+  } else if (typeOfElement === "fences" && modeActive === "fences") {
     console.log("Trató de sacar el id de contrato");
     cpsActiveId = CPSActive?.fieldData["ID Contrato"];
     console.log("CPS active id vallas", cpsActiveId);
     promoActiveIdAnuncio = promoActive?.fieldData["ID Anuncio Rentable"];
   }
-  console.log("CPS active id", cpsActiveId);
+  console.log("CPS active id", " ", typeOfElement, " ", cpsActiveId);
 
-  console.log("Anuncio activo", promoActive);
+  console.log("Anuncio activo", " ", typeOfElement, " ", promoActive);
 
-  console.log("promo active id", promoActiveIdAnuncio);
+  console.log("promo active id", " ", typeOfElement, " ", promoActiveIdAnuncio);
 
   const promoActivePedido = promoActive?.fieldData?.CPSD_ID_CPS;
-  console.log("promo active pedido/CPS id", promoActivePedido);
+  console.log(
+    "promo active pedido/CPS id",
+    " ",
+    typeOfElement,
+    " ",
+    promoActivePedido
+  );
 
   //Useeffect to get token
   useEffect(() => {
     (async () => {
-      if (typeOfElement === "billboards") {
+      if (typeOfElement === "billboards" && modeActive === "billboards") {
         setLoadingWorks(true);
         setErrorLoadingWorks("");
-      } else {
+      } else if (typeOfElement === "fences" && modeActive === "fences") {
         setLoadingWorksFences(true);
         setErrorLoadingWorksFences("");
       }
@@ -98,13 +106,14 @@ const BillboardsWorks = ({ route }) => {
         //Creating object to consult info of a hardcoded object
         let workResponse;
         let elementObject;
-        if (typeOfElement === "billboards") {
+        if (typeOfElement === "billboards" && modeActive === "billboards") {
           elementObject = {
             query: [
               {
                 PedidoId: promoActivePedido,
                 ClaveAnuncio: promoActiveIdAnuncio,
                 TipoInstalacionDescripcion: "Instalación",
+                TipoInstalacionDescripcion: "Cambio Arte",
                 Estatus: "Realizado",
               },
               // { //For testing purposes
@@ -123,7 +132,7 @@ const BillboardsWorks = ({ route }) => {
             limit: "2000",
           };
           workResponse = await getWorkInfo(elementObject, typeOfElement);
-        } else {
+        } else if (typeOfElement === "fences" && modeActive === "fences") {
           elementObject = {
             query: [
               {
@@ -146,17 +155,17 @@ const BillboardsWorks = ({ route }) => {
 
         // console.log("workResponse", workResponse?.data);
         console.log("Type of element", typeOfElement);
-        if (typeOfElement === "billboards") {
+        if (typeOfElement === "billboards" && modeActive === "billboards") {
           setLoadingWorks(false);
-        } else {
+        } else if (typeOfElement === "fences" && modeActive === "fences") {
           setLoadingWorksFences(false);
         }
         if (workResponse !== null && workResponse !== undefined) {
-          if (typeOfElement === "billboards") {
+          if (typeOfElement === "billboards" && modeActive === "billboards") {
             console.log("Work response espectaculares", workResponse?.data);
             setWorks(workResponse?.data);
             setFilteredWorks(workResponse?.data);
-          } else {
+          } else if (typeOfElement === "fences" && modeActive === "fences") {
             console.log("Work response vallas", workResponse?.data);
             setWorksFences(workResponse?.data);
             setFilteredWorksFences(workResponse?.data);
@@ -167,10 +176,10 @@ const BillboardsWorks = ({ route }) => {
         }
       } catch (error) {
         console.log(error);
-        if (typeOfElement === "billboards") {
+        if (typeOfElement === "billboards" && modeActive === "billboards") {
           setLoadingWorks(false);
           setErrorLoadingWorks(`${getErrorMessage(error.message, "Work")}`);
-        } else {
+        } else if (typeOfElement === "fences" && modeActive === "fences") {
           setLoadingWorksFences(false);
           setErrorLoadingWorksFences(
             `${getErrorMessage(error.message, "Work")}`
@@ -236,7 +245,11 @@ const BillboardsWorks = ({ route }) => {
   //function to to to info of CPS of a client
   const goToImageFullScreen = (item) => {
     if (typeOfElement === "billboards") {
-      setImageURLActive(item?.fieldData?.URL_Foto);
+      // setImageURLActive(item?.fieldData?.URL_Foto);
+      setImageURLActive(
+        item?.fieldData["Fotos_Comprobatorias Trabajos::Foto 1"]
+      );
+      console.log("URL foto billboards", imageURLActive);
     } else {
       setImageURLActive(item?.fieldData?.url);
     }

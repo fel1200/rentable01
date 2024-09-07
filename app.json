@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Rentable",
-    "slug": "appRentableVer1_0p3",
-    "version": "1.0.1",
+    "name": "Workplace",
+    "slug": "appRentableVer1_0p4",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "rentable.appversion01p3"
+      "bundleIdentifier": "rentable.appversion01p4"
     },
     "android": {
       "adaptiveIcon": {
